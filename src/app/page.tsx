@@ -2,24 +2,22 @@
 import { useState, useMemo, useEffect } from 'react';
 
 // --- תמונות רקע מתחלפות ---
-// *** חשוב: החלף את הקישורים כאן לתמונות אווירה איכותיות של המנות שלך ***
 const BG_IMAGES = [
-  "/bg1.jpeg", // תמונת אווירה 1 (למשל שולחן ערוך)
-  "/bg2.jpeg", // תמונת אווירה 2 (למשל מנה ראשונה)
-  "/bg3.jpeg", // תמונת אווירה 3 (למשל פסטה)
-  "/bg4.jpeg",// תמונת אווירה 4 (למשל קינוח/מאפה)
-  "/bg5.jpeg",
-  "/bg6.jpeg",
-  "/bg7.jpeg",
-  "/bg8.jpeg",
-  "/bg9.jpeg",
-  "/bg10.jpeg",
-  "/bg11.jpeg",
-  "/bg12.jpeg",
-  "/bg13.jpeg"
+  "/bg1.jpg", 
+  "/bg2.jpg", 
+  "/bg3.jpg", 
+  "/bg4.jpg",
+  "/bg5.jpg",
+  "/bg6.jpg",
+  "/bg7.jpg",
+  "/bg8.jpg",
+  "/bg9.jpg",
+  "/bg10.jpg",
+  "/bg11.jpg",
+  "/bg12.jpg",
+  "/bg13.jpg"
 ];
 
-// הגדרת קטגוריות
 const CATEGORIES = ["הכל", "מנות ראשונות", "מגשי אירוח", "פסטות ועיקריות", "מאפים"];
 
 const MENU = [
@@ -29,11 +27,11 @@ const MENU = [
   { id: 21, name: "שקשוקה", price: 50, category: "מנות ראשונות", desc: "פיקנטית עם לחם ביתי" },
 
   // --- מאפים ---
-  { id: 3, name: "לחמניות של אמא", price: 8, category: "מאפים", desc: "מינימום 10 יח' - ממולאות במטבוחה ביתית וחצילים" },
   { id: 5, name: "קיש בטטה (משפחתי)", price: 65, category: "מאפים", desc: "בצק פריך במילוי שמנת ובטטה" },
   { id: 6, name: "קיש תפ''א ופטריות (משפחתי)", price: 65, category: "מאפים", desc: "שילוב קלאסי של תפוחי אדמה ופטריות טריות" },
 
-  // --- מגשי אירוח ---
+  // --- מגשי אירוח (מינימום 30 יח') ---
+  { id: 3, name: "לחמניות של אמא", price: 8, category: "מגשי אירוח", desc: "ממולאות במטבוחה ביתית וחצילים (מחיר ליח')" }, // הועבר לכאן
   { id: 4, name: "מיני פריקסה", price: 14, category: "מגשי אירוח", desc: "סנדוויץ' תוניסאי ביס עם כל התוספות (מחיר ליח')" },
   { id: 7, name: "מיני קישים", price: 9, category: "מגשי אירוח", desc: "מבחר טעמים: בצל/פטריות/בטטה (מחיר ליח')" },
   { id: 8, name: "מיני טורטיה", price: 12, category: "מגשי אירוח", desc: "מגולגלות עם ממרחים וירקות קלויים (מחיר ליח')" },
@@ -43,6 +41,7 @@ const MENU = [
   { id: 14, name: "מיני פיתה סביח", price: 14, category: "מגשי אירוח", desc: "ביס מושלם עם חציל, ביצה וטחינה (מחיר ליח')" },
   { id: 15, name: "קרואסון סלמון", price: 16, category: "מגשי אירוח", desc: "במילוי גבינת שמנת וסלמון מעושן (מחיר ליח')" },
   
+  // מגשים ללא מינימום 30 (מוחרגים בלוגיקה)
   { id: 12, name: "מגש אנטיפסטי", price: 180, category: "מגשי אירוח", desc: "ירקות קלויים בתנור (מחיר למגש גדול)" },
   { id: 13, name: "מגש גבינות מפנק", price: 250, category: "מגשי אירוח", desc: "גבינות קשות ורכות, פירות ואגוזים (מחיר למגש)" },
 
@@ -60,17 +59,13 @@ export default function Home() {
   const [info, setInfo] = useState({ name: '', address: '' });
   const [errors, setErrors] = useState({ name: false, address: false });
   const [activeCategory, setActiveCategory] = useState("הכל");
-  
-  // State לרקע המתחלף
   const [bgIndex, setBgIndex] = useState(0);
 
-  // אפקט להחלפת תמונות אוטומטית
   useEffect(() => {
     const interval = setInterval(() => {
         setBgIndex((current) => (current + 1) % BG_IMAGES.length);
-    }, 5000); // מחליף תמונה כל 5 שניות
-
-    return () => clearInterval(interval); // ניקוי הטיימר ביציאה
+    }, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const filteredMenu = useMemo(() => 
@@ -85,6 +80,7 @@ export default function Home() {
       const currentQty = prev[id] || 0;
       let newQty = currentQty + delta;
 
+      // בדיקה: האם זה פריט שדורש מינימום 30?
       const isBulkItem = item.category === "מגשי אירוח" && !item.name.includes("מגש אנטיפסטי") && !item.name.includes("מגש גבינות");
 
       if (isBulkItem) {
@@ -132,29 +128,20 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#0d0d0d] text-white pb-44 px-4 relative overflow-x-hidden font-sans" dir="rtl">
       
-      {/* --- אזור הרקע המתחלף --- */}
       <div className="fixed inset-0 z-0">
-        {/* שכבת כיסוי כהה חזקה כדי שהטקסט יישאר קריא מעל התמונות */}
         <div className="absolute inset-0 bg-black/70 z-10"></div>
-        
-        {/* גראדינט נוסף מלמעלה למטה שמשתלב עם האתר */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#0d0d0d] via-transparent to-[#0d0d0d] z-20"></div>
-
-        {/* לולאת התמונות */}
         {BG_IMAGES.map((src, index) => (
             <img 
                 key={src}
                 src={src}
                 alt="רקע אווירה"
-                // התמונה הפעילה מקבלת שקיפות מלאה, האחרות נעלמות. המעבר הוא עדין (duration-1000)
                 className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${index === bgIndex ? 'opacity-100' : 'opacity-0'}`}
             />
         ))}
       </div>
 
-      {/* --- תוכן האתר (נמצא מעל הרקע בזכות z-index יחסי) --- */}
       <div className="relative z-30">
-        
         <header className="max-w-2xl mx-auto pt-16 pb-8 text-center">
             <div className="flex justify-center mb-6">
                 <div className="relative group">
@@ -179,7 +166,6 @@ export default function Home() {
             </div>
         </header>
 
-        {/* תפריט קטגוריות - הוספתי לו רקע כהה יותר כדי שיבלוט מעל התמונות */}
         <div className="max-w-xl mx-auto flex gap-2 overflow-x-auto pb-8 no-scrollbar sticky top-0 z-40 bg-[#0d0d0d]/90 backdrop-blur-xl pt-4 px-2 rounded-b-2xl">
             {CATEGORIES.map(cat => (
             <button 
@@ -196,7 +182,6 @@ export default function Home() {
             {filteredMenu.map(item => {
             const isBulkItem = item.category === "מגשי אירוח" && !item.name.includes("מגש אנטיפסטי") && !item.name.includes("מגש גבינות");
             
-            // הוספתי רקע מעט יותר אטום לכרטיסים כדי שיהיו קריאים
             return (
                 <div key={item.id} className="bg-[#161616]/90 backdrop-blur-sm rounded-3xl p-5 border border-white/10 flex items-center justify-between group hover:border-[#D4A5A5]/30 transition-all shadow-lg">
                     <div className="flex-1 pl-4">
@@ -220,7 +205,6 @@ export default function Home() {
                 <div>
                     <input 
                         placeholder="שם מלא *" 
-                        // הוספתי רקע יותר אטום לשדות הקלט
                         className={`w-full bg-[#161616]/90 backdrop-blur-sm border p-5 rounded-2xl outline-none transition-colors placeholder:text-gray-500 ${errors.name ? 'border-red-500/50 ring-1 ring-red-500/30' : 'border-white/10 focus:border-[#D4A5A5]/50'}`} 
                         onChange={e => {
                             setInfo({...info, name: e.target.value});
