@@ -3,19 +3,19 @@ import { useState, useMemo, useEffect } from 'react';
 
 // --- תמונות רקע מתחלפות ---
 const BG_IMAGES = [
-  "/bg1.jpg", 
-  "/bg2.jpg", 
-  "/bg3.jpg", 
-  "/bg4.jpg",
-  "/bg5.jpg",
-  "/bg6.jpg",
-  "/bg7.jpg",
-  "/bg8.jpg",
-  "/bg9.jpg",
-  "/bg10.jpg",
-  "/bg11.jpg",
-  "/bg12.jpg",
-  "/bg13.jpg"
+  "/bg1.jpeg", 
+  "/bg2.jpeg", 
+  "/bg3.jpeg", 
+  "/bg4.jpeg",
+  "/bg5.jpeg",
+  "/bg6.jpeg",
+  "/bg7.jpeg",
+  "/bg8.jpeg",
+  "/bg9.jpeg",
+  "/bg10.jpeg",
+  "/bg11.jpeg",
+  "/bg12.jpeg",
+  "/bg13.jpeg"
 ];
 
 const CATEGORIES = ["הכל", "מנות ראשונות", "מגשי אירוח", "פסטות ועיקריות", "מאפים"];
