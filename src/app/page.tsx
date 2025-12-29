@@ -57,6 +57,20 @@ export default function Home() {
 
       {/* Header דרמטי */}
       <header className="max-w-2xl mx-auto pt-20 pb-16 text-center relative z-10">
+
+        <div className="flex justify-center mb-6">
+          <div className="relative group">
+          {/* אפקט הילה מסביב ללוגו */}
+          <div className="absolute -inset-1 bg-orange-500 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+          <img 
+            src="/logo.jpg"  // וודא שזה השם המדויק של הקובץ בתיקיית public
+            alt="לוגו המטבח של אילנית" 
+            className="relative w-32 h-32 object-contain rounded-full border-2 border-white/10"
+          />
+        </div>
+
+  </div>
+
         <div className="relative inline-block">
           <div className="absolute -inset-2 bg-gradient-to-r from-orange-600 to-orange-400 rounded-full blur-xl opacity-20 animate-pulse"></div>
           <h1 className="relative text-6xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-orange-500">
