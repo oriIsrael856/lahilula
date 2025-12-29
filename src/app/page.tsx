@@ -1,5 +1,23 @@
 "use client";
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+
+// --- תמונות רקע מתחלפות ---
+// *** חשוב: החלף את הקישורים כאן לתמונות אווירה איכותיות של המנות שלך ***
+const BG_IMAGES = [
+  "/bg1.jpeg", // תמונת אווירה 1 (למשל שולחן ערוך)
+  "/bg2.jpeg", // תמונת אווירה 2 (למשל מנה ראשונה)
+  "/bg3.jpeg", // תמונת אווירה 3 (למשל פסטה)
+  "/bg4.jpeg",// תמונת אווירה 4 (למשל קינוח/מאפה)
+  "/bg5.jpeg",
+  "/bg6.jpeg",
+  "/bg7.jpeg",
+  "/bg8.jpeg",
+  "/bg9.jpeg",
+  "/bg10.jpeg",
+  "/bg11.jpeg",
+  "/bg12.jpeg",
+  "/bg13.jpeg"
+];
 
 // הגדרת קטגוריות
 const CATEGORIES = ["הכל", "מנות ראשונות", "מגשי אירוח", "פסטות ועיקריות", "מאפים"];
@@ -40,9 +58,20 @@ const MENU = [
 export default function Home() {
   const [cart, setCart] = useState<Record<number, number>>({});
   const [info, setInfo] = useState({ name: '', address: '' });
-  // כאן אנחנו שומרים איזה שדות חסרים כדי לצבוע אותם באדום
   const [errors, setErrors] = useState({ name: false, address: false });
   const [activeCategory, setActiveCategory] = useState("הכל");
+  
+  // State לרקע המתחלף
+  const [bgIndex, setBgIndex] = useState(0);
+
+  // אפקט להחלפת תמונות אוטומטית
+  useEffect(() => {
+    const interval = setInterval(() => {
+        setBgIndex((current) => (current + 1) % BG_IMAGES.length);
+    }, 5000); // מחליף תמונה כל 5 שניות
+
+    return () => clearInterval(interval); // ניקוי הטיימר ביציאה
+  }, []);
 
   const filteredMenu = useMemo(() => 
     activeCategory === "הכל" ? MENU : MENU.filter(m => m.category === activeCategory)
@@ -73,28 +102,23 @@ export default function Home() {
   }, 0);
 
   const send = () => {
-    // 1. בדיקה אם העגלה ריקה
     if (subtotal === 0) {
         alert("העגלה ריקה! יש לבחור מנות לפני ההזמנה.");
         return;
     }
 
-    // 2. בדיקת תקינות (Validation) לשדות
     const newErrors = {
-        name: !info.name.trim(), // האם השם ריק?
-        address: !info.address.trim() // האם הכתובת ריקה?
+        name: !info.name.trim(),
+        address: !info.address.trim()
     };
 
     setErrors(newErrors);
 
-    // אם יש שגיאה באחד השדות - עוצרים כאן ולא שולחים
     if (newErrors.name || newErrors.address) {
-        // גלילה למטה לאזור הטופס כדי שהמשתמש יראה מה חסר
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         return; 
     }
 
-    // אם הכל תקין, ממשיכים לשליחה
     const items = Object.entries(cart).filter(([_, q]) => q > 0)
       .map(([id, q]) => {
         const item = MENU.find(i => i.id === Number(id));
@@ -108,111 +132,135 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#0d0d0d] text-white pb-44 px-4 relative overflow-x-hidden font-sans" dir="rtl">
       
-      <div className="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-[#8BA888]/10 blur-[120px] rounded-full pointer-events-none"></div>
-      <div className="fixed bottom-[10%] right-[-10%] w-[400px] h-[400px] bg-[#D4A5A5]/10 blur-[100px] rounded-full pointer-events-none"></div>
-
-      <header className="max-w-2xl mx-auto pt-16 pb-8 text-center relative z-10">
-        <div className="flex justify-center mb-6">
-            <div className="relative group">
-                <div className="absolute -inset-1 bg-[#C48F65]/20 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
-                <img src="/logo.jpg" alt="Logo" className="relative w-40 h-40 object-contain rounded-full border border-white/5 shadow-2xl" />
-            </div>
-        </div>
-
-        <div className="relative inline-block">
-            <div className="absolute -inset-2 bg-gradient-to-r from-[#D4A5A5] to-[#C48F65] rounded-full blur-xl opacity-20 animate-pulse"></div>
-            <h1 className="relative text-7xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-[#C48F65]">
-                La Hilula
-            </h1>
-        </div>
+      {/* --- אזור הרקע המתחלף --- */}
+      <div className="fixed inset-0 z-0">
+        {/* שכבת כיסוי כהה חזקה כדי שהטקסט יישאר קריא מעל התמונות */}
+        <div className="absolute inset-0 bg-black/70 z-10"></div>
         
-        <div className="mt-4 flex items-center justify-center gap-3">
-            <div className="h-[1px] w-8 bg-[#8BA888]/30"></div>
-            <p className="text-[#8BA888] font-bold tracking-[0.15em] text-xs uppercase italic">
-                Ilanit Israel • 050-666-9062
-            </p>
-            <div className="h-[1px] w-8 bg-[#8BA888]/30"></div>
-        </div>
-      </header>
+        {/* גראדינט נוסף מלמעלה למטה שמשתלב עם האתר */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0d0d0d] via-transparent to-[#0d0d0d] z-20"></div>
 
-      <div className="max-w-xl mx-auto flex gap-2 overflow-x-auto pb-8 no-scrollbar sticky top-0 z-20 bg-[#0d0d0d]/95 backdrop-blur-md pt-4">
-        {CATEGORIES.map(cat => (
-          <button 
-            key={cat}
-            onClick={() => setActiveCategory(cat)}
-            className={`whitespace-nowrap px-6 py-2 rounded-full text-xs font-bold transition-all border ${activeCategory === cat ? 'bg-[#C48F65] border-[#C48F65] text-white' : 'border-white/10 text-gray-500 hover:border-white/20'}`}
-          >
-            {cat}
-          </button>
+        {/* לולאת התמונות */}
+        {BG_IMAGES.map((src, index) => (
+            <img 
+                key={src}
+                src={src}
+                alt="רקע אווירה"
+                // התמונה הפעילה מקבלת שקיפות מלאה, האחרות נעלמות. המעבר הוא עדין (duration-1000)
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${index === bgIndex ? 'opacity-100' : 'opacity-0'}`}
+            />
         ))}
       </div>
 
-      <div className="max-w-xl mx-auto space-y-4 relative z-10">
-        {filteredMenu.map(item => {
-           const isBulkItem = item.category === "מגשי אירוח" && !item.name.includes("מגש אנטיפסטי") && !item.name.includes("מגש גבינות");
-           
-           return (
-            <div key={item.id} className="bg-[#161616] rounded-3xl p-5 border border-white/5 flex items-center justify-between group hover:border-[#D4A5A5]/20 transition-all shadow-lg">
-                <div className="flex-1 pl-4">
-                <h3 className="text-xl font-bold group-hover:text-[#D4A5A5] transition-colors">{item.name}</h3>
-                <p className="text-gray-500 text-xs mt-1 leading-relaxed">{item.desc}</p>
-                <div className="flex items-center gap-2 mt-2">
-                    <span className="text-[#C48F65] font-black">₪{item.price}</span>
-                    {isBulkItem && <span className="text-[10px] text-[#8BA888] bg-[#8BA888]/10 px-2 py-0.5 rounded-full">מינימום 30 יח'</span>}
-                </div>
-                </div>
-                
-                <div className="flex items-center gap-3 bg-black/40 p-1.5 rounded-2xl border border-white/5">
-                <button onClick={() => update(item.id, 1)} className="w-10 h-10 bg-gradient-to-br from-[#8BA888] to-[#5F7460] rounded-xl font-bold text-xl active:scale-90 transition-all text-white shadow-[0_0_10px_rgba(139,168,136,0.3)]">+</button>
-                <span className="font-black text-lg w-8 text-center">{cart[item.id] || 0}</span>
-                <button onClick={() => update(item.id, -1)} className={`w-10 h-10 bg-[#222] text-gray-400 rounded-xl font-bold text-xl active:scale-90 transition-all ${cart[item.id] ? 'opacity-100 hover:bg-white hover:text-black' : 'opacity-20 pointer-events-none'}`}>-</button>
+      {/* --- תוכן האתר (נמצא מעל הרקע בזכות z-index יחסי) --- */}
+      <div className="relative z-30">
+        
+        <header className="max-w-2xl mx-auto pt-16 pb-8 text-center">
+            <div className="flex justify-center mb-6">
+                <div className="relative group">
+                    <div className="absolute -inset-1 bg-[#C48F65]/20 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                    <img src="/logo.jpg" alt="Logo" className="relative w-40 h-40 object-contain rounded-full border border-white/5 shadow-2xl" />
                 </div>
             </div>
-        )})}
 
-        <div className="pt-10 space-y-4 pb-10">
-            <div>
-                <input 
-                    placeholder="שם מלא *" 
-                    className={`w-full bg-[#161616] border p-5 rounded-2xl outline-none transition-colors placeholder:text-gray-600 ${errors.name ? 'border-red-500 ring-1 ring-red-500' : 'border-white/5 focus:border-[#D4A5A5]/50'}`} 
-                    onChange={e => {
-                        setInfo({...info, name: e.target.value});
-                        if(e.target.value) setErrors({...errors, name: false});
-                    }} 
-                />
-                {errors.name && <p className="text-red-500 text-xs mt-1 mr-2">נא למלא שם מלא</p>}
+            <div className="relative inline-block">
+                <div className="absolute -inset-2 bg-gradient-to-r from-[#D4A5A5] to-[#C48F65] rounded-full blur-xl opacity-20 animate-pulse"></div>
+                <h1 className="relative text-7xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-[#C48F65]">
+                    La Hilula
+                </h1>
             </div>
+            
+            <div className="mt-4 flex items-center justify-center gap-3">
+                <div className="h-[1px] w-8 bg-[#8BA888]/50"></div>
+                <p className="text-[#8BA888] font-bold tracking-[0.15em] text-xs uppercase italic">
+                    Ilanit Israel • 050-666-9062
+                </p>
+                <div className="h-[1px] w-8 bg-[#8BA888]/50"></div>
+            </div>
+        </header>
 
-            <div>
-                <input 
-                    placeholder="כתובת למשלוח *" 
-                    className={`w-full bg-[#161616] border p-5 rounded-2xl outline-none transition-colors placeholder:text-gray-600 ${errors.address ? 'border-red-500 ring-1 ring-red-500' : 'border-white/5 focus:border-[#D4A5A5]/50'}`} 
-                    onChange={e => {
-                        setInfo({...info, address: e.target.value});
-                        if(e.target.value) setErrors({...errors, address: false});
-                    }} 
-                />
-                {errors.address && <p className="text-red-500 text-xs mt-1 mr-2">נא למלא כתובת למשלוח</p>}
+        {/* תפריט קטגוריות - הוספתי לו רקע כהה יותר כדי שיבלוט מעל התמונות */}
+        <div className="max-w-xl mx-auto flex gap-2 overflow-x-auto pb-8 no-scrollbar sticky top-0 z-40 bg-[#0d0d0d]/90 backdrop-blur-xl pt-4 px-2 rounded-b-2xl">
+            {CATEGORIES.map(cat => (
+            <button 
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`whitespace-nowrap px-6 py-2 rounded-full text-xs font-bold transition-all border ${activeCategory === cat ? 'bg-[#C48F65] border-[#C48F65] text-white' : 'border-white/10 text-gray-400 hover:border-white/30'}`}
+            >
+                {cat}
+            </button>
+            ))}
+        </div>
+
+        <div className="max-w-xl mx-auto space-y-4 mt-4">
+            {filteredMenu.map(item => {
+            const isBulkItem = item.category === "מגשי אירוח" && !item.name.includes("מגש אנטיפסטי") && !item.name.includes("מגש גבינות");
+            
+            // הוספתי רקע מעט יותר אטום לכרטיסים כדי שיהיו קריאים
+            return (
+                <div key={item.id} className="bg-[#161616]/90 backdrop-blur-sm rounded-3xl p-5 border border-white/10 flex items-center justify-between group hover:border-[#D4A5A5]/30 transition-all shadow-lg">
+                    <div className="flex-1 pl-4">
+                    <h3 className="text-xl font-bold group-hover:text-[#D4A5A5] transition-colors">{item.name}</h3>
+                    <p className="text-gray-400 text-xs mt-1 leading-relaxed">{item.desc}</p>
+                    <div className="flex items-center gap-2 mt-2">
+                        <span className="text-[#C48F65] font-black">₪{item.price}</span>
+                        {isBulkItem && <span className="text-[10px] text-[#8BA888] bg-[#8BA888]/10 px-2 py-0.5 rounded-full">מינימום 30 יח'</span>}
+                    </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-3 bg-black/60 p-1.5 rounded-2xl border border-white/10">
+                    <button onClick={() => update(item.id, 1)} className="w-10 h-10 bg-gradient-to-br from-[#8BA888] to-[#5F7460] rounded-xl font-bold text-xl active:scale-90 transition-all text-white shadow-[0_0_10px_rgba(139,168,136,0.3)]">+</button>
+                    <span className="font-black text-lg w-8 text-center">{cart[item.id] || 0}</span>
+                    <button onClick={() => update(item.id, -1)} className={`w-10 h-10 bg-[#222] text-gray-400 rounded-xl font-bold text-xl active:scale-90 transition-all ${cart[item.id] ? 'opacity-100 hover:bg-white hover:text-black' : 'opacity-20 pointer-events-none'}`}>-</button>
+                    </div>
+                </div>
+            )})}
+
+            <div className="pt-10 space-y-4 pb-10">
+                <div>
+                    <input 
+                        placeholder="שם מלא *" 
+                        // הוספתי רקע יותר אטום לשדות הקלט
+                        className={`w-full bg-[#161616]/90 backdrop-blur-sm border p-5 rounded-2xl outline-none transition-colors placeholder:text-gray-500 ${errors.name ? 'border-red-500/50 ring-1 ring-red-500/30' : 'border-white/10 focus:border-[#D4A5A5]/50'}`} 
+                        onChange={e => {
+                            setInfo({...info, name: e.target.value});
+                            if(e.target.value) setErrors({...errors, name: false});
+                        }} 
+                    />
+                    {errors.name && <p className="text-red-400 text-xs mt-1 mr-2">נא למלא שם מלא</p>}
+                </div>
+
+                <div>
+                    <input 
+                        placeholder="כתובת למשלוח *" 
+                        className={`w-full bg-[#161616]/90 backdrop-blur-sm border p-5 rounded-2xl outline-none transition-colors placeholder:text-gray-500 ${errors.address ? 'border-red-500/50 ring-1 ring-red-500/30' : 'border-white/10 focus:border-[#D4A5A5]/50'}`} 
+                        onChange={e => {
+                            setInfo({...info, address: e.target.value});
+                            if(e.target.value) setErrors({...errors, address: false});
+                        }} 
+                    />
+                    {errors.address && <p className="text-red-400 text-xs mt-1 mr-2">נא למלא כתובת למשלוח</p>}
+                </div>
             </div>
         </div>
+
+        {subtotal > 0 && (
+            <div className="fixed bottom-8 left-0 right-0 px-6 z-50">
+            <div className="max-w-md mx-auto bg-gradient-to-r from-[#D4A5A5] to-[#C48F65] p-[1px] rounded-[2.5rem] shadow-[0_0_40px_rgba(196,143,101,0.4)]">
+                <div className="bg-[#0d0d0d]/95 backdrop-blur-xl rounded-[2.4rem] p-6 flex items-center justify-between">
+                <div>
+                    <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest mb-1">סה"כ לתשלום</p>
+                    <span className="text-3xl font-black text-white">₪{subtotal}</span>
+                </div>
+                <button onClick={send} className="bg-white text-black px-6 py-4 rounded-2xl font-black hover:bg-[#C48F65] hover:text-white transition-all shadow-lg flex items-center gap-2">
+                    <span>להזמנה</span>
+                    <span className="text-xl">🚀</span>
+                </button>
+                </div>
+            </div>
+            </div>
+        )}
       </div>
-
-      {subtotal > 0 && (
-        <div className="fixed bottom-8 left-0 right-0 px-6 z-50">
-          <div className="max-w-md mx-auto bg-gradient-to-r from-[#D4A5A5] to-[#C48F65] p-[1px] rounded-[2.5rem] shadow-[0_0_30px_rgba(196,143,101,0.3)]">
-            <div className="bg-[#0d0d0d] rounded-[2.4rem] p-6 flex items-center justify-between">
-              <div>
-                <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest mb-1">סה"כ לתשלום</p>
-                <span className="text-3xl font-black text-white">₪{subtotal}</span>
-              </div>
-              <button onClick={send} className="bg-white text-black px-6 py-4 rounded-2xl font-black hover:bg-[#C48F65] hover:text-white transition-all shadow-lg flex items-center gap-2">
-                <span>להזמנה</span>
-                <span className="text-xl">🚀</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </main>
   );
 }
