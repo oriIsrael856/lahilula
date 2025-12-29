@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+  --color-orange-500: #f97316;
+  --color-orange-600: #ea580c;
+}
+
+/* כוח עזר למקרה ש-Tailwind לא נטען */
+@layer base {
+  body {
+    background-color: #F8F5F2;
+    direction: rtl;
+  }
+}
