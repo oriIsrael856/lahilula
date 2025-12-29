@@ -1,7 +1,7 @@
 "use client";
 import { useState, useMemo, useEffect } from 'react';
 
-// --- תמונות רקע מתחלפות ---
+// --- תמונות רקע מתחלפות (עודכן ל-jpeg) ---
 const BG_IMAGES = [
   "/bg1.jpeg", 
   "/bg2.jpeg", 
@@ -31,7 +31,7 @@ const MENU = [
   { id: 6, name: "קיש תפ''א ופטריות (משפחתי)", price: 65, category: "מאפים", desc: "שילוב קלאסי של תפוחי אדמה ופטריות טריות" },
 
   // --- מגשי אירוח (מינימום 30 יח') ---
-  { id: 3, name: "לחמניות של אמא", price: 8, category: "מגשי אירוח", desc: "ממולאות במטבוחה ביתית וחצילים (מחיר ליח')" }, // הועבר לכאן
+  { id: 3, name: "לחמניות של אמא", price: 8, category: "מגשי אירוח", desc: "ממולאות במטבוחה ביתית וחצילים (מחיר ליח')" },
   { id: 4, name: "מיני פריקסה", price: 14, category: "מגשי אירוח", desc: "סנדוויץ' תוניסאי ביס עם כל התוספות (מחיר ליח')" },
   { id: 7, name: "מיני קישים", price: 9, category: "מגשי אירוח", desc: "מבחר טעמים: בצל/פטריות/בטטה (מחיר ליח')" },
   { id: 8, name: "מיני טורטיה", price: 12, category: "מגשי אירוח", desc: "מגולגלות עם ממרחים וירקות קלויים (מחיר ליח')" },
@@ -41,7 +41,7 @@ const MENU = [
   { id: 14, name: "מיני פיתה סביח", price: 14, category: "מגשי אירוח", desc: "ביס מושלם עם חציל, ביצה וטחינה (מחיר ליח')" },
   { id: 15, name: "קרואסון סלמון", price: 16, category: "מגשי אירוח", desc: "במילוי גבינת שמנת וסלמון מעושן (מחיר ליח')" },
   
-  // מגשים ללא מינימום 30 (מוחרגים בלוגיקה)
+  // מגשים ללא מינימום 30
   { id: 12, name: "מגש אנטיפסטי", price: 180, category: "מגשי אירוח", desc: "ירקות קלויים בתנור (מחיר למגש גדול)" },
   { id: 13, name: "מגש גבינות מפנק", price: 250, category: "מגשי אירוח", desc: "גבינות קשות ורכות, פירות ואגוזים (מחיר למגש)" },
 
@@ -60,6 +60,7 @@ export default function Home() {
   const [errors, setErrors] = useState({ name: false, address: false });
   const [activeCategory, setActiveCategory] = useState("הכל");
   const [bgIndex, setBgIndex] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -80,7 +81,6 @@ export default function Home() {
       const currentQty = prev[id] || 0;
       let newQty = currentQty + delta;
 
-      // בדיקה: האם זה פריט שדורש מינימום 30?
       const isBulkItem = item.category === "מגשי אירוח" && !item.name.includes("מגש אנטיפסטי") && !item.name.includes("מגש גבינות");
 
       if (isBulkItem) {
@@ -125,9 +125,15 @@ export default function Home() {
     window.open(`https://wa.me/972506669062?text=${encodeURIComponent(text)}`);
   };
 
+  const handleCategorySelect = (category: string) => {
+    setActiveCategory(category);
+    setIsMenuOpen(false);
+  };
+
   return (
     <main className="min-h-screen bg-[#0d0d0d] text-white pb-44 px-4 relative overflow-x-hidden font-sans" dir="rtl">
       
+      {/* תמונות רקע */}
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-black/70 z-10"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-[#0d0d0d] via-transparent to-[#0d0d0d] z-20"></div>
@@ -142,9 +148,22 @@ export default function Home() {
       </div>
 
       <div className="relative z-30">
-        <header className="max-w-2xl mx-auto pt-16 pb-8 text-center">
+        
+        {/* Header */}
+        <header className="max-w-2xl mx-auto pt-10 pb-8 text-center relative">
+            
+            {/* כפתור המבורגר לפתיחת תפריט */}
+            <button 
+                onClick={() => setIsMenuOpen(true)}
+                className="absolute top-10 right-2 z-50 p-2 text-[#C48F65] hover:text-white transition-colors"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+            </button>
+
             <div className="flex justify-center mb-6">
-                <div className="relative group">
+                <div className="relative group cursor-pointer" onClick={() => setActiveCategory("הכל")}>
                     <div className="absolute -inset-1 bg-[#C48F65]/20 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
                     <img src="/logo.jpg" alt="Logo" className="relative w-40 h-40 object-contain rounded-full border border-white/5 shadow-2xl" />
                 </div>
@@ -166,19 +185,52 @@ export default function Home() {
             </div>
         </header>
 
-        <div className="max-w-xl mx-auto flex gap-2 overflow-x-auto pb-8 no-scrollbar sticky top-0 z-40 bg-[#0d0d0d]/90 backdrop-blur-xl pt-4 px-2 rounded-b-2xl">
-            {CATEGORIES.map(cat => (
-            <button 
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`whitespace-nowrap px-6 py-2 rounded-full text-xs font-bold transition-all border ${activeCategory === cat ? 'bg-[#C48F65] border-[#C48F65] text-white' : 'border-white/10 text-gray-400 hover:border-white/30'}`}
-            >
-                {cat}
-            </button>
-            ))}
-        </div>
+        {/* --- תפריט צד (Drawer) --- */}
+        {isMenuOpen && (
+            <div className="fixed inset-0 z-50 flex justify-start">
+                <div 
+                    className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
+                    onClick={() => setIsMenuOpen(false)}
+                ></div>
 
-        <div className="max-w-xl mx-auto space-y-4 mt-4">
+                <div className="relative bg-[#1a1a1a] w-3/4 max-w-sm h-full shadow-2xl p-8 border-l border-[#C48F65]/20 flex flex-col">
+                    <div className="flex justify-between items-center mb-10">
+                        <h2 className="text-2xl font-bold text-[#C48F65]">תפריט</h2>
+                        <button onClick={() => setIsMenuOpen(false)} className="text-white hover:text-red-400 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div className="space-y-4">
+                        {CATEGORIES.filter(cat => cat !== "הכל").map(cat => (
+                            <button
+                                key={cat}
+                                onClick={() => handleCategorySelect(cat)}
+                                className={`w-full text-right p-4 rounded-xl text-lg font-bold transition-all ${
+                                    activeCategory === cat 
+                                    ? 'bg-[#C48F65] text-white shadow-lg' 
+                                    : 'text-gray-300 hover:bg-white/5 hover:text-[#C48F65]'
+                                }`}
+                            >
+                                {cat}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="mt-auto pt-8 border-t border-white/10 text-center text-gray-500 text-sm">
+                        La Hilula • Premium Cooking
+                    </div>
+                </div>
+            </div>
+        )}
+
+        <div className="max-w-xl mx-auto space-y-4 mt-8">
+            <div className="text-center text-[#C48F65] text-sm font-bold mb-4 tracking-widest uppercase">
+                {activeCategory === "הכל" ? "כל המנות" : activeCategory}
+            </div>
+
             {filteredMenu.map(item => {
             const isBulkItem = item.category === "מגשי אירוח" && !item.name.includes("מגש אנטיפסטי") && !item.name.includes("מגש גבינות");
             
