@@ -2,9 +2,30 @@
 import { useState } from 'react';
 
 const MENU = [
-  { id: 1, name: "קציצות הבית ברוטב", price: 65, desc: "בקר טרי בבישול ארוך עם ירקות שורש", image: "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=400&q=80", color: "from-orange-500 to-orange-700" },
-  { id: 2, name: "מוסקה חצילים", price: 58, desc: "שכבות חצילים קלויים ובשר ברוטב ביתי", image: "https://images.unsplash.com/photo-1590515174093-66f654b7f940?w=400&q=80", color: "from-orange-600 to-red-700" },
-  { id: 3, name: "אורז צהוב עם שקדים", price: 28, desc: "אורז בסמטי נימוח עם שקדים קלויים", image: "https://images.unsplash.com/photo-1512058560566-42724afbc2db?w=400&q=80", color: "from-yellow-500 to-orange-600" }
+  { id: 1, name: "סביצ'ה דג", price: 65, desc: "..", image: null, color: "from-orange-500 to-orange-700" },
+  { id: 2, name: "ברוסקטת גבינות", price: 58, desc: "..", image: null, color: "from-orange-600 to-red-700" },
+  { id: 3, name: "ברוסקטת חצילים ופלפלים", price: 28, desc: "...", image: null, color: "from-yellow-500 to-orange-600" },
+  { id: 4, name: "פריקסה", price: 28, desc: "..", image: null},
+  { id: 5, name: "קיש בטטה", price: 50, desc:"..", image: null},
+  { id: 6, name: "קיש תפ''א ופטריות", price: 50, desc:"..", image: null},
+  { id: 7, name: "מיני קישים", price: 50, desc:"..", image: null},
+  { id: 8, name: "מיני טורטיה", price: 50, desc:"..", image: null},
+  { id: 9, name: "מיני פוקאצ'ה", price: 50, desc:"..", image: null},
+  { id: 10, name: "מגש לביבות תפ''א", price: 50, desc:"..", image: null},
+  { id: 11, name: "מגש סושי", price: 50, desc:"..", image: null},
+  { id: 12, name: "מגש אנטיפסטי", price: 50, desc:"..", image: null},
+  { id: 13, name: "מגש גבינות מפנק", price: 50, desc:"..", image: null},
+  { id: 14, name: "מיני פיתה סביח", price: 50, desc:"..", image: null},
+  { id: 15, name: "קרואסונים ממולאים גבינת שמנת וסלמון", price: 50, desc:"..", image: null},
+  { id: 16, name: "לחמניות של אמא", price: 50, desc:"לחמניות עבודת יד ממולאות במטבוחה ביתית חצילים מטוגנים ופשטידה.", image: null},
+  { id: 17, name: "קוסקוס של סבתא", price: 50, desc:"..", image: null},
+  { id: 18, name: "פסטה רוזה", price: 50, desc:"..", image: null},
+  { id: 19, name: "פסטה שמנת פטריות", price: 50, desc:"..", image: null},
+  { id: 20, name: "פסטה עם ירקות מוקפצים", price: 50, desc:"..", image: null},
+  { id: 21, name: "שקשוקה", price: 50, desc:"..", image: null},
+  { id: 22, name: "תפו''א מוקרם", price: 50, desc:"..", image: null},
+  { id: 23, name: "תפו''א/בטטה בתנור", price: 50, desc:"..", image: null}
+
 ];
 
 export default function Home() {
@@ -23,8 +44,8 @@ export default function Home() {
   const send = () => {
     const items = Object.entries(cart).filter(([_, q]) => q > 0)
       .map(([id, q]) => `${MENU.find(i => i.id === Number(id))?.name} x${q}`).join('\n');
-    const text = `הזמנה חדשה מ"המטבח של אילנית":\n\n${items}\n\nסה"כ: ₪${subtotal + 30}\nשם: ${info.name}\nכתובת: ${info.address}`;
-    window.open(`https://wa.me/972500000000?text=${encodeURIComponent(text)}`);
+    const text = `הזמנה חדשה מ"המטבח של אילנית":\n\n${items}\n\nסה"כ: ₪${subtotal}\nשם: ${info.name}\nכתובת: ${info.address}`;
+    window.open(`https://wa.me/972506669062?text=${encodeURIComponent(text)}`);
   };
 
   return (
