@@ -15,8 +15,8 @@ const MENU = [
   { id: 5, name: "קיש בטטה (משפחתי)", price: 65, category: "מאפים", desc: "בצק פריך במילוי שמנת ובטטה" },
   { id: 6, name: "קיש תפ''א ופטריות (משפחתי)", price: 65, category: "מאפים", desc: "שילוב קלאסי של תפוחי אדמה ופטריות טריות" },
 
-  // --- מגשי אירוח (פינגר פוד - מחיר ליחידה, מינימום 30) ---
-  { id: 4, name: "מיני פריקסה", price: 14, category: "מגשי אירוח", desc: "סנדוויץ' תוניסאי ביס עם כל התוספות (מחיר ליח')" }, // עודכן
+  // --- מגשי אירוח ---
+  { id: 4, name: "מיני פריקסה", price: 14, category: "מגשי אירוח", desc: "סנדוויץ' תוניסאי ביס עם כל התוספות (מחיר ליח')" },
   { id: 7, name: "מיני קישים", price: 9, category: "מגשי אירוח", desc: "מבחר טעמים: בצל/פטריות/בטטה (מחיר ליח')" },
   { id: 8, name: "מיני טורטיה", price: 12, category: "מגשי אירוח", desc: "מגולגלות עם ממרחים וירקות קלויים (מחיר ליח')" },
   { id: 9, name: "מיני פוקאצ'ה", price: 10, category: "מגשי אירוח", desc: "עם ירקות אנטיפסטי ושמן זית (מחיר ליח')" },
@@ -25,7 +25,6 @@ const MENU = [
   { id: 14, name: "מיני פיתה סביח", price: 14, category: "מגשי אירוח", desc: "ביס מושלם עם חציל, ביצה וטחינה (מחיר ליח')" },
   { id: 15, name: "קרואסון סלמון", price: 16, category: "מגשי אירוח", desc: "במילוי גבינת שמנת וסלמון מעושן (מחיר ליח')" },
   
-  // מגשים שנמכרים כ'מגש' שלם ולא לפי יחידה (החרגתי מהמינימום 30)
   { id: 12, name: "מגש אנטיפסטי", price: 180, category: "מגשי אירוח", desc: "ירקות קלויים בתנור (מחיר למגש גדול)" },
   { id: 13, name: "מגש גבינות מפנק", price: 250, category: "מגשי אירוח", desc: "גבינות קשות ורכות, פירות ואגוזים (מחיר למגש)" },
 
@@ -41,13 +40,14 @@ const MENU = [
 export default function Home() {
   const [cart, setCart] = useState<Record<number, number>>({});
   const [info, setInfo] = useState({ name: '', address: '' });
+  // כאן אנחנו שומרים איזה שדות חסרים כדי לצבוע אותם באדום
+  const [errors, setErrors] = useState({ name: false, address: false });
   const [activeCategory, setActiveCategory] = useState("הכל");
 
   const filteredMenu = useMemo(() => 
     activeCategory === "הכל" ? MENU : MENU.filter(m => m.category === activeCategory)
   , [activeCategory]);
 
-  // לוגיקה חכמה לעדכון כמויות
   const update = (id: number, delta: number) => {
     const item = MENU.find(i => i.id === id);
     if (!item) return;
@@ -56,14 +56,10 @@ export default function Home() {
       const currentQty = prev[id] || 0;
       let newQty = currentQty + delta;
 
-      // בדיקה: האם זה פריט שדורש מינימום 30?
-      // החרגתי את מגש הגבינות והאנטיפסטי כי הם נמכרים בדרך כלל כיחידה אחת גדולה
       const isBulkItem = item.category === "מגשי אירוח" && !item.name.includes("מגש אנטיפסטי") && !item.name.includes("מגש גבינות");
 
       if (isBulkItem) {
-        // אם מנסים להוסיף מ-0, קפוץ ישר ל-30
         if (currentQty === 0 && delta > 0) return { ...prev, [id]: 30 };
-        // אם מנסים לרדת מתחת ל-30, אפס את הכמות
         if (newQty < 30) return { ...prev, [id]: 0 };
       }
 
@@ -77,6 +73,28 @@ export default function Home() {
   }, 0);
 
   const send = () => {
+    // 1. בדיקה אם העגלה ריקה
+    if (subtotal === 0) {
+        alert("העגלה ריקה! יש לבחור מנות לפני ההזמנה.");
+        return;
+    }
+
+    // 2. בדיקת תקינות (Validation) לשדות
+    const newErrors = {
+        name: !info.name.trim(), // האם השם ריק?
+        address: !info.address.trim() // האם הכתובת ריקה?
+    };
+
+    setErrors(newErrors);
+
+    // אם יש שגיאה באחד השדות - עוצרים כאן ולא שולחים
+    if (newErrors.name || newErrors.address) {
+        // גלילה למטה לאזור הטופס כדי שהמשתמש יראה מה חסר
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        return; 
+    }
+
+    // אם הכל תקין, ממשיכים לשליחה
     const items = Object.entries(cart).filter(([_, q]) => q > 0)
       .map(([id, q]) => {
         const item = MENU.find(i => i.id === Number(id));
@@ -90,7 +108,6 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#0d0d0d] text-white pb-44 px-4 relative overflow-x-hidden font-sans" dir="rtl">
       
-      {/* הילות הרקע */}
       <div className="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-[#8BA888]/10 blur-[120px] rounded-full pointer-events-none"></div>
       <div className="fixed bottom-[10%] right-[-10%] w-[400px] h-[400px] bg-[#D4A5A5]/10 blur-[100px] rounded-full pointer-events-none"></div>
 
@@ -118,7 +135,6 @@ export default function Home() {
         </div>
       </header>
 
-      {/* תפריט קטגוריות */}
       <div className="max-w-xl mx-auto flex gap-2 overflow-x-auto pb-8 no-scrollbar sticky top-0 z-20 bg-[#0d0d0d]/95 backdrop-blur-md pt-4">
         {CATEGORIES.map(cat => (
           <button 
@@ -133,7 +149,6 @@ export default function Home() {
 
       <div className="max-w-xl mx-auto space-y-4 relative z-10">
         {filteredMenu.map(item => {
-           // בדיקה האם להציג הודעת מינימום
            const isBulkItem = item.category === "מגשי אירוח" && !item.name.includes("מגש אנטיפסטי") && !item.name.includes("מגש גבינות");
            
            return (
@@ -155,9 +170,30 @@ export default function Home() {
             </div>
         )})}
 
-        <div className="pt-10 space-y-4">
-            <input placeholder="שם מלא" className="w-full bg-[#161616] border border-white/5 p-5 rounded-2xl outline-none focus:border-[#D4A5A5]/50 transition-colors placeholder:text-gray-600" onChange={e => setInfo({...info, name: e.target.value})} />
-            <input placeholder="כתובת למשלוח" className="w-full bg-[#161616] border border-white/5 p-5 rounded-2xl outline-none focus:border-[#D4A5A5]/50 transition-colors placeholder:text-gray-600" onChange={e => setInfo({...info, address: e.target.value})} />
+        <div className="pt-10 space-y-4 pb-10">
+            <div>
+                <input 
+                    placeholder="שם מלא *" 
+                    className={`w-full bg-[#161616] border p-5 rounded-2xl outline-none transition-colors placeholder:text-gray-600 ${errors.name ? 'border-red-500 ring-1 ring-red-500' : 'border-white/5 focus:border-[#D4A5A5]/50'}`} 
+                    onChange={e => {
+                        setInfo({...info, name: e.target.value});
+                        if(e.target.value) setErrors({...errors, name: false});
+                    }} 
+                />
+                {errors.name && <p className="text-red-500 text-xs mt-1 mr-2">נא למלא שם מלא</p>}
+            </div>
+
+            <div>
+                <input 
+                    placeholder="כתובת למשלוח *" 
+                    className={`w-full bg-[#161616] border p-5 rounded-2xl outline-none transition-colors placeholder:text-gray-600 ${errors.address ? 'border-red-500 ring-1 ring-red-500' : 'border-white/5 focus:border-[#D4A5A5]/50'}`} 
+                    onChange={e => {
+                        setInfo({...info, address: e.target.value});
+                        if(e.target.value) setErrors({...errors, address: false});
+                    }} 
+                />
+                {errors.address && <p className="text-red-500 text-xs mt-1 mr-2">נא למלא כתובת למשלוח</p>}
+            </div>
         </div>
       </div>
 
