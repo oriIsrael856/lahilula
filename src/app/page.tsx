@@ -1,7 +1,7 @@
 "use client";
 import { useState, useMemo, useEffect, useRef } from 'react';
 
-// --- תמונות רקע לאווירה כללית (נשאר כפי שהיה) ---
+// --- תמונות רקע לאווירה כללית ---
 const BG_IMAGES = [
   "/bg1.jpeg", "/bg2.jpeg", "/bg3.jpeg", "/bg4.jpeg",
   "/bg5.jpeg", "/bg6.jpeg", "/bg7.jpeg", "/bg8.jpeg",
@@ -10,7 +10,7 @@ const BG_IMAGES = [
 
 const CATEGORIES = ["הכל", "מנות ראשונות", "מגשי אירוח", "עמדות לאירועים", "פסטות ועיקריות", "מאפים"];
 
-// --- הגדרת המנות עם תמונות ספציפיות ---
+// --- הגדרת המנות ---
 const MENU = [
   // --- מנות ראשונות ---
   { 
@@ -19,7 +19,6 @@ const MENU = [
     price: 65, 
     category: "מנות ראשונות", 
     desc: "דג טרי בתיבול עדין, שמן זית, לימון ועשבי תיבול מהגינה", 
-    // דוגמה למנה עם כמה תמונות מתחלפות:
     images: ["/ceviche1.jpg", "/ceviche2.jpg"] 
   },
   { 
@@ -28,10 +27,9 @@ const MENU = [
     price: 58, 
     category: "מנות ראשונות", 
     desc: "גבינות בוטיק, דבש ופירות העונה", 
-    // דוגמה למנה עם תמונה אחת בלבד:
     images: ["/bruschetta.jpg"] 
   },
-  { id: 21, name: "שקשוקה", price: 50, category: "מנות ראשונות", desc: "פיקנטית עם לחם ביתי", images: [] }, // ללא תמונה
+  { id: 21, name: "שקשוקה", price: 50, category: "מנות ראשונות", desc: "פיקנטית עם לחם ביתי", images: [] },
 
   // --- מאפים ---
   { id: 5, name: "קיש בטטה (משפחתי)", price: 65, category: "מאפים", desc: "בצק פריך במילוי שמנת ובטטה", images: ["/quiche_batata.jpg"] },
@@ -44,10 +42,21 @@ const MENU = [
     price: 2500, 
     category: "עמדות לאירועים", 
     desc: "לאירועים עד 100 איש. כולל הכנה פרונטלית במקום, דבש, חמאה, ריבות ותה מרוקאי.",
-    images: ["/mp1.jpeg", "/mp2.jpeg", "/mp3.jpeg", "/mp4.jpeg"] // מצגת תמונות לעמדה
+    images: ["/mofletta1.jpg"]
   },
 
   // --- מגשי אירוח ---
+  
+  // *** המנה החדשה שהוספנו ***
+  { 
+    id: 25, 
+    name: "מגש עוגיות מרוקאיות", 
+    price: 200, 
+    category: "מגשי אירוח", 
+    desc: "מגש עשיר עם 20-25 עוגיות מרוקאיות אותנטיות בעבודת יד (מחיר למגש)", 
+    images: ["/cookies.jpg"] // שים כאן תמונה של העוגיות
+  },
+
   { id: 3, name: "לחמניות של אמא", price: 8, category: "מגשי אירוח", desc: "ממולאות במטבוחה ביתית וחצילים (מחיר ליח')", images: [] },
   { id: 4, name: "מיני פריקסה", price: 14, category: "מגשי אירוח", desc: "סנדוויץ' תוניסאי ביס עם כל התוספות (מחיר ליח')", images: [] },
   { id: 7, name: "מיני קישים", price: 9, category: "מגשי אירוח", desc: "מבחר טעמים: בצל/פטריות/בטטה (מחיר ליח')", images: [] },
@@ -71,35 +80,32 @@ const MENU = [
   { id: 23, name: "תפו''א/בטטה בתנור", price: 45, category: "פסטות ועיקריות", desc: "פלחי ירקות שורש צלויים", images: [] }
 ];
 
-// --- רכיב חדש: כרטיס מנה (מטפל בתצוגת התמונות של המנה) ---
+// --- רכיב כרטיס מנה ---
 function MenuItem({ item, qty, update }: { item: any, qty: number, update: (id: number, delta: number) => void }) {
   const [currentImg, setCurrentImg] = useState(0);
 
-  // לוגיקה להחלפת תמונות אוטומטית אם יש יותר מתמונה אחת למנה
   useEffect(() => {
     if (!item.images || item.images.length <= 1) return;
-    
-    // מוסיף דיליי רנדומלי קטן כדי שלא כל המנות יתחלפו בדיוק באותו זמן (רובוטי)
     const delay = Math.random() * 2000; 
-    
     const timeout = setTimeout(() => {
         const interval = setInterval(() => {
             setCurrentImg(prev => (prev + 1) % item.images.length);
-        }, 3500); // כל 3.5 שניות
+        }, 3500); 
         return () => clearInterval(interval);
     }, delay);
-
     return () => clearTimeout(timeout);
   }, [item.images]);
 
+  // לוגיקה לתצוגת "מינימום 30" - הוספנו החרגה לעוגיות
   const isBulkItem = item.category === "מגשי אירוח" 
       && !item.name.includes("מגש אנטיפסטי") 
-      && !item.name.includes("מגש גבינות");
+      && !item.name.includes("מגש גבינות")
+      && !item.name.includes("מגש עוגיות");
 
   return (
     <article className="bg-[#161616]/90 backdrop-blur-sm rounded-3xl p-4 border border-white/10 flex flex-col sm:flex-row gap-4 group hover:border-[#D4A5A5]/30 transition-all shadow-lg overflow-hidden">
         
-        {/* אזור התמונה של המנה */}
+        {/* תמונה */}
         {item.images && item.images.length > 0 && (
             <div className="w-full sm:w-32 h-48 sm:h-32 relative rounded-2xl overflow-hidden flex-shrink-0 bg-black/50">
                 {item.images.map((src: string, index: number) => (
@@ -110,8 +116,6 @@ function MenuItem({ item, qty, update }: { item: any, qty: number, update: (id: 
                         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${index === currentImg ? 'opacity-100' : 'opacity-0'}`}
                     />
                 ))}
-                
-                {/* אינדיקטור (נקודות) אם יש כמה תמונות */}
                 {item.images.length > 1 && (
                     <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
                         {item.images.map((_: any, i: number) => (
@@ -122,12 +126,10 @@ function MenuItem({ item, qty, update }: { item: any, qty: number, update: (id: 
             </div>
         )}
 
-        {/* אזור הטקסט והכפתורים */}
+        {/* תוכן */}
         <div className="flex-1 flex flex-col justify-between">
             <div>
-                <div className="flex justify-between items-start">
-                    <h3 className="text-xl font-bold group-hover:text-[#D4A5A5] transition-colors">{item.name}</h3>
-                </div>
+                <h3 className="text-xl font-bold group-hover:text-[#D4A5A5] transition-colors">{item.name}</h3>
                 <p className="text-gray-400 text-xs mt-1 leading-relaxed pl-2">{item.desc}</p>
             </div>
             
@@ -202,9 +204,11 @@ export default function Home() {
       const currentQty = prev[id] || 0;
       let newQty = currentQty + delta;
       
+      // לוגיקה לחישוב כמויות (החרגנו את העוגיות מהמינימום)
       const isBulkItem = item.category === "מגשי אירוח" 
         && !item.name.includes("מגש אנטיפסטי") 
-        && !item.name.includes("מגש גבינות");
+        && !item.name.includes("מגש גבינות")
+        && !item.name.includes("מגש עוגיות");
 
       if (isBulkItem) {
         if (currentQty === 0 && delta > 0) return { ...prev, [id]: 30 };
