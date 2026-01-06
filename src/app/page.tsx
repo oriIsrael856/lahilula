@@ -1,53 +1,171 @@
 "use client";
 import { useState, useMemo, useEffect, useRef } from 'react';
 
-// --- תמונות רקע מתחלפות ---
+// --- תמונות רקע לאווירה כללית (נשאר כפי שהיה) ---
 const BG_IMAGES = [
   "/bg1.jpeg", "/bg2.jpeg", "/bg3.jpeg", "/bg4.jpeg",
   "/bg5.jpeg", "/bg6.jpeg", "/bg7.jpeg", "/bg8.jpeg",
   "/bg9.jpeg", "/bg10.jpeg", "/bg11.jpeg", "/bg12.jpeg", "/bg13.jpeg"
 ];
 
-// הוספתי את "עמדות לאירועים" לרשימה
 const CATEGORIES = ["הכל", "מנות ראשונות", "מגשי אירוח", "עמדות לאירועים", "פסטות ועיקריות", "מאפים"];
 
+// --- הגדרת המנות עם תמונות ספציפיות ---
 const MENU = [
   // --- מנות ראשונות ---
-  { id: 1, name: "סביצ'ה דג", price: 65, category: "מנות ראשונות", desc: "דג טרי בתיבול עדין, שמן זית, לימון ועשבי תיבול מהגינה", color: "from-[#8BA888] to-[#5F7460]" },
-  { id: 2, name: "ברוסקטת גבינות", price: 58, category: "מנות ראשונות", desc: "גבינות בוטיק, דבש ופירות העונה", color: "from-[#D4A5A5] to-[#B88686]" },
-  { id: 21, name: "שקשוקה", price: 50, category: "מנות ראשונות", desc: "פיקנטית עם לחם ביתי" },
+  { 
+    id: 1, 
+    name: "סביצ'ה דג", 
+    price: 65, 
+    category: "מנות ראשונות", 
+    desc: "דג טרי בתיבול עדין, שמן זית, לימון ועשבי תיבול מהגינה", 
+    // דוגמה למנה עם כמה תמונות מתחלפות:
+    images: ["/ceviche1.jpg", "/ceviche2.jpg"] 
+  },
+  { 
+    id: 2, 
+    name: "ברוסקטת גבינות", 
+    price: 58, 
+    category: "מנות ראשונות", 
+    desc: "גבינות בוטיק, דבש ופירות העונה", 
+    // דוגמה למנה עם תמונה אחת בלבד:
+    images: ["/bruschetta.jpg"] 
+  },
+  { id: 21, name: "שקשוקה", price: 50, category: "מנות ראשונות", desc: "פיקנטית עם לחם ביתי", images: [] }, // ללא תמונה
 
   // --- מאפים ---
-  { id: 5, name: "קיש בטטה (משפחתי)", price: 65, category: "מאפים", desc: "בצק פריך במילוי שמנת ובטטה" },
-  { id: 6, name: "קיש תפ''א ופטריות (משפחתי)", price: 65, category: "מאפים", desc: "שילוב קלאסי של תפוחי אדמה ופטריות טריות" },
+  { id: 5, name: "קיש בטטה (משפחתי)", price: 65, category: "מאפים", desc: "בצק פריך במילוי שמנת ובטטה", images: ["/quiche_batata.jpg"] },
+  { id: 6, name: "קיש תפ''א ופטריות (משפחתי)", price: 65, category: "מאפים", desc: "שילוב קלאסי של תפוחי אדמה ופטריות טריות", images: ["/quiche_mushroom.jpg"] },
 
-  // --- עמדות לאירועים (הקטגוריה החדשה) ---
-  { id: 24, name: "עמדת מופלטות וספינג'", price: 2500, category: "עמדות לאירועים", desc: "לאירועים עד 100 איש. כולל הכנה פרונטלית במקום, דבש, חמאה, ריבות ותה מרוקאי." },
+  // --- עמדות לאירועים ---
+  { 
+    id: 24, 
+    name: "עמדת מופלטות וספינג'", 
+    price: 2500, 
+    category: "עמדות לאירועים", 
+    desc: "לאירועים עד 100 איש. כולל הכנה פרונטלית במקום, דבש, חמאה, ריבות ותה מרוקאי.",
+    images: ["/mp1.jpeg", "/mp2.jpeg", "/mp3.jpeg", "/mp4.jpeg"] // מצגת תמונות לעמדה
+  },
 
-  // --- מגשי אירוח (מינימום 30 יח') ---
-  { id: 3, name: "לחמניות של אמא", price: 8, category: "מגשי אירוח", desc: "ממולאות במטבוחה ביתית וחצילים (מחיר ליח')" },
-  { id: 4, name: "מיני פריקסה", price: 14, category: "מגשי אירוח", desc: "סנדוויץ' תוניסאי ביס עם כל התוספות (מחיר ליח')" },
-  { id: 7, name: "מיני קישים", price: 9, category: "מגשי אירוח", desc: "מבחר טעמים: בצל/פטריות/בטטה (מחיר ליח')" },
-  { id: 8, name: "מיני טורטיה", price: 12, category: "מגשי אירוח", desc: "מגולגלות עם ממרחים וירקות קלויים (מחיר ליח')" },
-  { id: 9, name: "מיני פוקאצ'ה", price: 10, category: "מגשי אירוח", desc: "עם ירקות אנטיפסטי ושמן זית (מחיר ליח')" },
-  { id: 10, name: "לביבות תפ''א (לטקס)", price: 6, category: "מגשי אירוח", desc: "זהובות ופריכות (מחיר ליח')" },
-  { id: 11, name: "סושי (יחידה)", price: 5, category: "מגשי אירוח", desc: "צמחוני/דג בציפויים מיוחדים (מחיר ליח')" },
-  { id: 14, name: "מיני פיתה סביח", price: 14, category: "מגשי אירוח", desc: "ביס מושלם עם חציל, ביצה וטחינה (מחיר ליח')" },
-  { id: 15, name: "קרואסון סלמון", price: 16, category: "מגשי אירוח", desc: "במילוי גבינת שמנת וסלמון מעושן (מחיר ליח')" },
+  // --- מגשי אירוח ---
+  { id: 3, name: "לחמניות של אמא", price: 8, category: "מגשי אירוח", desc: "ממולאות במטבוחה ביתית וחצילים (מחיר ליח')", images: [] },
+  { id: 4, name: "מיני פריקסה", price: 14, category: "מגשי אירוח", desc: "סנדוויץ' תוניסאי ביס עם כל התוספות (מחיר ליח')", images: [] },
+  { id: 7, name: "מיני קישים", price: 9, category: "מגשי אירוח", desc: "מבחר טעמים: בצל/פטריות/בטטה (מחיר ליח')", images: [] },
+  { id: 8, name: "מיני טורטיה", price: 12, category: "מגשי אירוח", desc: "מגולגלות עם ממרחים וירקות קלויים (מחיר ליח')", images: [] },
+  { id: 9, name: "מיני פוקאצ'ה", price: 10, category: "מגשי אירוח", desc: "עם ירקות אנטיפסטי ושמן זית (מחיר ליח')", images: [] },
+  { id: 10, name: "לביבות תפ''א (לטקס)", price: 6, category: "מגשי אירוח", desc: "זהובות ופריכות (מחיר ליח')", images: [] },
+  { id: 11, name: "סושי (יחידה)", price: 5, category: "מגשי אירוח", desc: "צמחוני/דג בציפויים מיוחדים (מחיר ליח')", images: [] },
+  { id: 14, name: "מיני פיתה סביח", price: 14, category: "מגשי אירוח", desc: "ביס מושלם עם חציל, ביצה וטחינה (מחיר ליח')", images: [] },
+  { id: 15, name: "קרואסון סלמון", price: 16, category: "מגשי אירוח", desc: "במילוי גבינת שמנת וסלמון מעושן (מחיר ליח')", images: [] },
   
-  // מגשים גדולים (ללא מינימום 30)
-  { id: 12, name: "מגש אנטיפסטי", price: 180, category: "מגשי אירוח", desc: "ירקות קלויים בתנור (מחיר למגש גדול)" },
-  { id: 13, name: "מגש גבינות מפנק", price: 250, category: "מגשי אירוח", desc: "גבינות קשות ורכות, פירות ואגוזים (מחיר למגש)" },
+  // מגשים גדולים
+  { id: 12, name: "מגש אנטיפסטי", price: 180, category: "מגשי אירוח", desc: "ירקות קלויים בתנור (מחיר למגש גדול)", images: ["/antipasti.jpg"] },
+  { id: 13, name: "מגש גבינות מפנק", price: 250, category: "מגשי אירוח", desc: "גבינות קשות ורכות, פירות ואגוזים (מחיר למגש)", images: ["/cheese_platter.jpg"] },
 
   // --- פסטות ועיקריות ---
-  { id: 17, name: "קוסקוס של סבתא", price: 50, category: "פסטות ועיקריות", desc: "עבודת יד עם מרק ירקות עשיר (מנה אישית)" },
-  { id: 18, name: "פסטה רוזה", price: 52, category: "פסטות ועיקריות", desc: "רוטב עגבניות ושמנת קטיפתי" },
-  { id: 19, name: "פסטה שמנת פטריות", price: 52, category: "פסטות ועיקריות", desc: "רוטב עשיר עם פטריות טריות" },
-  { id: 20, name: "פסטה ירקות", price: 48, category: "פסטות ועיקריות", desc: "בשמן זית, שום ועשבי תיבול" },
-  { id: 22, name: "תפו''א מוקרם", price: 55, category: "פסטות ועיקריות", desc: "בשמנת וגבינות" },
-  { id: 23, name: "תפו''א/בטטה בתנור", price: 45, category: "פסטות ועיקריות", desc: "פלחי ירקות שורש צלויים" }
+  { id: 17, name: "קוסקוס של סבתא", price: 50, category: "פסטות ועיקריות", desc: "עבודת יד עם מרק ירקות עשיר (מנה אישית)", images: [] },
+  { id: 18, name: "פסטה רוזה", price: 52, category: "פסטות ועיקריות", desc: "רוטב עגבניות ושמנת קטיפתי", images: [] },
+  { id: 19, name: "פסטה שמנת פטריות", price: 52, category: "פסטות ועיקריות", desc: "רוטב עשיר עם פטריות טריות", images: [] },
+  { id: 20, name: "פסטה ירקות", price: 48, category: "פסטות ועיקריות", desc: "בשמן זית, שום ועשבי תיבול", images: [] },
+  { id: 22, name: "תפו''א מוקרם", price: 55, category: "פסטות ועיקריות", desc: "בשמנת וגבינות", images: [] },
+  { id: 23, name: "תפו''א/בטטה בתנור", price: 45, category: "פסטות ועיקריות", desc: "פלחי ירקות שורש צלויים", images: [] }
 ];
 
+// --- רכיב חדש: כרטיס מנה (מטפל בתצוגת התמונות של המנה) ---
+function MenuItem({ item, qty, update }: { item: any, qty: number, update: (id: number, delta: number) => void }) {
+  const [currentImg, setCurrentImg] = useState(0);
+
+  // לוגיקה להחלפת תמונות אוטומטית אם יש יותר מתמונה אחת למנה
+  useEffect(() => {
+    if (!item.images || item.images.length <= 1) return;
+    
+    // מוסיף דיליי רנדומלי קטן כדי שלא כל המנות יתחלפו בדיוק באותו זמן (רובוטי)
+    const delay = Math.random() * 2000; 
+    
+    const timeout = setTimeout(() => {
+        const interval = setInterval(() => {
+            setCurrentImg(prev => (prev + 1) % item.images.length);
+        }, 3500); // כל 3.5 שניות
+        return () => clearInterval(interval);
+    }, delay);
+
+    return () => clearTimeout(timeout);
+  }, [item.images]);
+
+  const isBulkItem = item.category === "מגשי אירוח" 
+      && !item.name.includes("מגש אנטיפסטי") 
+      && !item.name.includes("מגש גבינות");
+
+  return (
+    <article className="bg-[#161616]/90 backdrop-blur-sm rounded-3xl p-4 border border-white/10 flex flex-col sm:flex-row gap-4 group hover:border-[#D4A5A5]/30 transition-all shadow-lg overflow-hidden">
+        
+        {/* אזור התמונה של המנה */}
+        {item.images && item.images.length > 0 && (
+            <div className="w-full sm:w-32 h-48 sm:h-32 relative rounded-2xl overflow-hidden flex-shrink-0 bg-black/50">
+                {item.images.map((src: string, index: number) => (
+                    <img 
+                        key={src}
+                        src={src}
+                        alt={item.name}
+                        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${index === currentImg ? 'opacity-100' : 'opacity-0'}`}
+                    />
+                ))}
+                
+                {/* אינדיקטור (נקודות) אם יש כמה תמונות */}
+                {item.images.length > 1 && (
+                    <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
+                        {item.images.map((_: any, i: number) => (
+                            <div key={i} className={`w-1.5 h-1.5 rounded-full transition-all ${i === currentImg ? 'bg-white' : 'bg-white/30'}`}></div>
+                        ))}
+                    </div>
+                )}
+            </div>
+        )}
+
+        {/* אזור הטקסט והכפתורים */}
+        <div className="flex-1 flex flex-col justify-between">
+            <div>
+                <div className="flex justify-between items-start">
+                    <h3 className="text-xl font-bold group-hover:text-[#D4A5A5] transition-colors">{item.name}</h3>
+                </div>
+                <p className="text-gray-400 text-xs mt-1 leading-relaxed pl-2">{item.desc}</p>
+            </div>
+            
+            <div className="flex items-end justify-between mt-4">
+                <div className="flex flex-col">
+                    <span className="text-[#C48F65] font-black text-lg" aria-label={`מחיר: ${item.price} שקלים`}>₪{item.price}</span>
+                    {isBulkItem && <span className="text-[10px] text-[#8BA888] bg-[#8BA888]/10 px-2 py-0.5 rounded-full w-fit mt-1">מינימום 30 יח'</span>}
+                </div>
+
+                <div className="flex items-center gap-3 bg-black/60 p-1.5 rounded-2xl border border-white/10">
+                    <button 
+                        onClick={() => update(item.id, 1)} 
+                        aria-label={`הוסף יחידה אחת של ${item.name}`}
+                        className="w-10 h-10 bg-gradient-to-br from-[#8BA888] to-[#5F7460] rounded-xl font-bold text-xl active:scale-90 transition-all text-white shadow-[0_0_10px_rgba(139,168,136,0.3)] focus:outline-none focus:ring-2 focus:ring-white"
+                    >
+                        <span aria-hidden="true">+</span>
+                    </button>
+                    
+                    <span className="font-black text-lg w-8 text-center" aria-live="polite" aria-label={`כמות נוכחית: ${qty || 0}`}>
+                        {qty || 0}
+                    </span>
+                    
+                    <button 
+                        onClick={() => update(item.id, -1)} 
+                        aria-label={`הסר יחידה אחת של ${item.name}`}
+                        disabled={!qty}
+                        className={`w-10 h-10 bg-[#222] text-gray-400 rounded-xl font-bold text-xl active:scale-90 transition-all focus:outline-none focus:ring-2 focus:ring-white ${qty ? 'opacity-100 hover:bg-white hover:text-black' : 'opacity-20 cursor-not-allowed'}`}
+                    >
+                        <span aria-hidden="true">-</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </article>
+  );
+}
+
+// --- הרכיב הראשי ---
 export default function Home() {
   const [cart, setCart] = useState<Record<number, number>>({});
   const [info, setInfo] = useState({ name: '', address: '' });
@@ -84,8 +202,6 @@ export default function Home() {
       const currentQty = prev[id] || 0;
       let newQty = currentQty + delta;
       
-      // הלוגיקה פשוטה יותר עכשיו:
-      // רק מה שבקטגוריית "מגשי אירוח" (ולא מגש שלם) מקבל מינימום 30
       const isBulkItem = item.category === "מגשי אירוח" 
         && !item.name.includes("מגש אנטיפסטי") 
         && !item.name.includes("מגש גבינות");
@@ -138,6 +254,7 @@ export default function Home() {
         דלג לתוכן המרכזי
       </a>
 
+      {/* תמונות רקע כלליות */}
       <div className="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
         <div className="absolute inset-0 bg-black/70 z-10"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-[#0d0d0d] via-transparent to-[#0d0d0d] z-20"></div>
@@ -154,7 +271,6 @@ export default function Home() {
       <div className="relative z-30">
         
         <header className="max-w-2xl mx-auto pt-10 pb-8 text-center relative">
-            
             <button 
                 onClick={() => setIsMenuOpen(true)}
                 aria-label="פתח תפריט קטגוריות"
@@ -252,46 +368,14 @@ export default function Home() {
                 {activeCategory === "הכל" ? "כל המנות" : activeCategory}
             </h2>
 
-            {filteredMenu.map(item => {
-            const isBulkItem = item.category === "מגשי אירוח" 
-              && !item.name.includes("מגש אנטיפסטי") 
-              && !item.name.includes("מגש גבינות");
-            
-            return (
-                <article key={item.id} className="bg-[#161616]/90 backdrop-blur-sm rounded-3xl p-5 border border-white/10 flex items-center justify-between group hover:border-[#D4A5A5]/30 transition-all shadow-lg">
-                    <div className="flex-1 pl-4">
-                        <h3 className="text-xl font-bold group-hover:text-[#D4A5A5] transition-colors">{item.name}</h3>
-                        <p className="text-gray-400 text-xs mt-1 leading-relaxed">{item.desc}</p>
-                        <div className="flex items-center gap-2 mt-2">
-                            <span className="text-[#C48F65] font-black" aria-label={`מחיר: ${item.price} שקלים`}>₪{item.price}</span>
-                            {isBulkItem && <span className="text-[10px] text-[#8BA888] bg-[#8BA888]/10 px-2 py-0.5 rounded-full">מינימום 30 יח'</span>}
-                        </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-3 bg-black/60 p-1.5 rounded-2xl border border-white/10">
-                        <button 
-                            onClick={() => update(item.id, 1)} 
-                            aria-label={`הוסף יחידה אחת של ${item.name}`}
-                            className="w-10 h-10 bg-gradient-to-br from-[#8BA888] to-[#5F7460] rounded-xl font-bold text-xl active:scale-90 transition-all text-white shadow-[0_0_10px_rgba(139,168,136,0.3)] focus:outline-none focus:ring-2 focus:ring-white"
-                        >
-                            <span aria-hidden="true">+</span>
-                        </button>
-                        
-                        <span className="font-black text-lg w-8 text-center" aria-live="polite" aria-label={`כמות נוכחית: ${cart[item.id] || 0}`}>
-                            {cart[item.id] || 0}
-                        </span>
-                        
-                        <button 
-                            onClick={() => update(item.id, -1)} 
-                            aria-label={`הסר יחידה אחת של ${item.name}`}
-                            disabled={!cart[item.id]}
-                            className={`w-10 h-10 bg-[#222] text-gray-400 rounded-xl font-bold text-xl active:scale-90 transition-all focus:outline-none focus:ring-2 focus:ring-white ${cart[item.id] ? 'opacity-100 hover:bg-white hover:text-black' : 'opacity-20 cursor-not-allowed'}`}
-                        >
-                            <span aria-hidden="true">-</span>
-                        </button>
-                    </div>
-                </article>
-            )})}
+            {filteredMenu.map(item => (
+                <MenuItem 
+                    key={item.id} 
+                    item={item} 
+                    qty={cart[item.id] || 0} 
+                    update={update} 
+                />
+            ))}
 
             <form className="pt-10 space-y-4 pb-10" onSubmit={(e) => e.preventDefault()}>
                 <div>
