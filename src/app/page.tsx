@@ -28,7 +28,7 @@ const MENU = [
     price: 58, 
     category: "מנות ראשונות", 
     desc: "גבינות בוטיק, דבש ופירות העונה", 
-    images: ["/mp3.jpeg"] 
+    images: [] 
   },
   { id: 21, name: "שקשוקה", price: 50, category: "מנות ראשונות", desc: "פיקנטית עם לחם ביתי", images: [] },
 
@@ -43,7 +43,7 @@ const MENU = [
     price: 2500, 
     category: "עמדות לאירועים", 
     desc: "לאירועים עד 100 איש. כולל הכנה פרונטלית במקום, דבש, חמאה, ריבות ותה מרוקאי.",
-    images: ["/mp4.jpeg"] 
+    images: ["/mp1.jpeg", "/mp2.jpeg", "/mp3.jpeg", "/mp4.jpeg"] 
   },
 
   // --- מגשי אירוח ---
@@ -53,7 +53,7 @@ const MENU = [
     price: 200, 
     category: "מגשי אירוח", 
     desc: "מגש עשיר עם 20-25 עוגיות מרוקאיות אותנטיות בעבודת יד (מחיר למגש)", 
-    images: ["/cp3.jpeg"] 
+    images: ["/cp1.jpeg", "/cp2.jpeg", "/cp3.jpeg"] 
   },
   { id: 3, name: "לחמניות של אמא", price: 8, category: "מגשי אירוח", desc: "ממולאות במטבוחה ביתית וחצילים (מחיר ליח')", images: [] },
   { id: 4, name: "מיני פריקסה", price: 14, category: "מגשי אירוח", desc: "סנדוויץ' תוניסאי ביס עם כל התוספות (מחיר ליח')", images: [] },
