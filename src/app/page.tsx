@@ -1,7 +1,7 @@
 "use client";
 import { useState, useMemo, useEffect, useRef } from 'react';
 
-// --- תמונות רקע לאווירה כללית ---
+// --- תמונות רקע ---
 const BG_IMAGES = [
   "/bg1.jpeg", "/bg2.jpeg", "/bg3.jpeg", "/bg4.jpeg",
   "/bg5.jpeg", "/bg6.jpeg", "/bg7.jpeg", "/bg8.jpeg",
@@ -46,17 +46,14 @@ const MENU = [
   },
 
   // --- מגשי אירוח ---
-  
-  // *** המנה החדשה שהוספנו ***
   { 
     id: 25, 
     name: "מגש עוגיות מרוקאיות", 
     price: 200, 
     category: "מגשי אירוח", 
     desc: "מגש עשיר עם 20-25 עוגיות מרוקאיות אותנטיות בעבודת יד (מחיר למגש)", 
-    images: ["/cp1.jpeg", "/cp2.jpeg", "/cp3.jpeg"] // שים כאן תמונה של העוגיות
+    images: ["/cp1.jpeg", "/cp2.jpeg", "/cp3.jpeg"] 
   },
-
   { id: 3, name: "לחמניות של אמא", price: 8, category: "מגשי אירוח", desc: "ממולאות במטבוחה ביתית וחצילים (מחיר ליח')", images: [] },
   { id: 4, name: "מיני פריקסה", price: 14, category: "מגשי אירוח", desc: "סנדוויץ' תוניסאי ביס עם כל התוספות (מחיר ליח')", images: [] },
   { id: 7, name: "מיני קישים", price: 9, category: "מגשי אירוח", desc: "מבחר טעמים: בצל/פטריות/בטטה (מחיר ליח')", images: [] },
@@ -96,7 +93,6 @@ function MenuItem({ item, qty, update }: { item: any, qty: number, update: (id: 
     return () => clearTimeout(timeout);
   }, [item.images]);
 
-  // לוגיקה לתצוגת "מינימום 30" - הוספנו החרגה לעוגיות
   const isBulkItem = item.category === "מגשי אירוח" 
       && !item.name.includes("מגש אנטיפסטי") 
       && !item.name.includes("מגש גבינות")
@@ -104,8 +100,6 @@ function MenuItem({ item, qty, update }: { item: any, qty: number, update: (id: 
 
   return (
     <article className="bg-[#161616]/90 backdrop-blur-sm rounded-3xl p-4 border border-white/10 flex flex-col sm:flex-row gap-4 group hover:border-[#D4A5A5]/30 transition-all shadow-lg overflow-hidden">
-        
-        {/* תמונה */}
         {item.images && item.images.length > 0 && (
             <div className="w-full sm:w-32 h-48 sm:h-32 relative rounded-2xl overflow-hidden flex-shrink-0 bg-black/50">
                 {item.images.map((src: string, index: number) => (
@@ -126,7 +120,6 @@ function MenuItem({ item, qty, update }: { item: any, qty: number, update: (id: 
             </div>
         )}
 
-        {/* תוכן */}
         <div className="flex-1 flex flex-col justify-between">
             <div>
                 <h3 className="text-xl font-bold group-hover:text-[#D4A5A5] transition-colors">{item.name}</h3>
@@ -140,26 +133,9 @@ function MenuItem({ item, qty, update }: { item: any, qty: number, update: (id: 
                 </div>
 
                 <div className="flex items-center gap-3 bg-black/60 p-1.5 rounded-2xl border border-white/10">
-                    <button 
-                        onClick={() => update(item.id, 1)} 
-                        aria-label={`הוסף יחידה אחת של ${item.name}`}
-                        className="w-10 h-10 bg-gradient-to-br from-[#8BA888] to-[#5F7460] rounded-xl font-bold text-xl active:scale-90 transition-all text-white shadow-[0_0_10px_rgba(139,168,136,0.3)] focus:outline-none focus:ring-2 focus:ring-white"
-                    >
-                        <span aria-hidden="true">+</span>
-                    </button>
-                    
-                    <span className="font-black text-lg w-8 text-center" aria-live="polite" aria-label={`כמות נוכחית: ${qty || 0}`}>
-                        {qty || 0}
-                    </span>
-                    
-                    <button 
-                        onClick={() => update(item.id, -1)} 
-                        aria-label={`הסר יחידה אחת של ${item.name}`}
-                        disabled={!qty}
-                        className={`w-10 h-10 bg-[#222] text-gray-400 rounded-xl font-bold text-xl active:scale-90 transition-all focus:outline-none focus:ring-2 focus:ring-white ${qty ? 'opacity-100 hover:bg-white hover:text-black' : 'opacity-20 cursor-not-allowed'}`}
-                    >
-                        <span aria-hidden="true">-</span>
-                    </button>
+                    <button onClick={() => update(item.id, 1)} className="w-10 h-10 bg-gradient-to-br from-[#8BA888] to-[#5F7460] rounded-xl font-bold text-xl active:scale-90 transition-all text-white shadow-[0_0_10px_rgba(139,168,136,0.3)] focus:outline-none focus:ring-2 focus:ring-white">+</button>
+                    <span className="font-black text-lg w-8 text-center" aria-live="polite">{qty || 0}</span>
+                    <button onClick={() => update(item.id, -1)} disabled={!qty} className={`w-10 h-10 bg-[#222] text-gray-400 rounded-xl font-bold text-xl active:scale-90 transition-all focus:outline-none focus:ring-2 focus:ring-white ${qty ? 'opacity-100 hover:bg-white hover:text-black' : 'opacity-20 cursor-not-allowed'}`}>-</button>
                 </div>
             </div>
         </div>
@@ -170,8 +146,10 @@ function MenuItem({ item, qty, update }: { item: any, qty: number, update: (id: 
 // --- הרכיב הראשי ---
 export default function Home() {
   const [cart, setCart] = useState<Record<number, number>>({});
-  const [info, setInfo] = useState({ name: '', address: '' });
-  const [errors, setErrors] = useState({ name: false, address: false });
+  
+  // הוספנו שדה guests למידע
+  const [info, setInfo] = useState({ name: '', address: '', guests: '' });
+  const [errors, setErrors] = useState({ name: false, address: false, guests: false });
   const [activeCategory, setActiveCategory] = useState("הכל");
   const [bgIndex, setBgIndex] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -204,7 +182,6 @@ export default function Home() {
       const currentQty = prev[id] || 0;
       let newQty = currentQty + delta;
       
-      // לוגיקה לחישוב כמויות (החרגנו את העוגיות מהמינימום)
       const isBulkItem = item.category === "מגשי אירוח" 
         && !item.name.includes("מגש אנטיפסטי") 
         && !item.name.includes("מגש גבינות")
@@ -223,27 +200,136 @@ export default function Home() {
     return acc + (item ? item.price * qty : 0);
   }, 0);
 
-  const send = () => {
+  // --- פונקציית ולידציה משותפת ---
+  const validate = () => {
     if (subtotal === 0) {
-        alert("העגלה ריקה! יש לבחור מנות לפני ההזמנה.");
-        return;
+        alert("העגלה ריקה! יש לבחור מנות לפני הפעולה.");
+        return false;
     }
     const newErrors = {
         name: !info.name.trim(),
-        address: !info.address.trim()
+        address: !info.address.trim(),
+        guests: !info.guests.trim()
     };
     setErrors(newErrors);
-    if (newErrors.name || newErrors.address) {
+
+    if (newErrors.name || newErrors.address || newErrors.guests) {
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        return; 
+        return false;
     }
+    return true;
+  };
+
+  // --- שליחה לוואטסאפ ---
+  const send = () => {
+    if (!validate()) return;
+    
     const items = Object.entries(cart).filter(([_, q]) => q > 0)
       .map(([id, q]) => {
         const item = MENU.find(i => i.id === Number(id));
         return `• ${item?.name} (${q} יח') - ₪${(item?.price || 0) * q}`;
       }).join('\n');
-    const text = `הזמנה חדשה מ-La Hilula 🌿\n\nפירוט המנות:\n${items}\n\nסה"כ לתשלום: ₪${subtotal}\n\nפרטי לקוח:\nשם: ${info.name}\nכתובת: ${info.address}`;
+
+    const text = `הזמנה חדשה מ-La Hilula 🌿\n\nפירוט המנות:\n${items}\n\nסה"כ לתשלום: ₪${subtotal}\n\nפרטי האירוע:\nשם המזמין: ${info.name}\nמיקום/כתובת: ${info.address}\nמספר אורחים: ${info.guests}`;
     window.open(`https://wa.me/972506669062?text=${encodeURIComponent(text)}`);
+  };
+
+  // --- יצירת הצעת מחיר (PDF/Print) ---
+  const generateQuote = () => {
+    if (!validate()) return;
+
+    const items = Object.entries(cart).filter(([_, q]) => q > 0).map(([id, qty]) => {
+        const item = MENU.find(i => i.id === Number(id));
+        return { ...item, qty, total: (item?.price || 0) * qty };
+    });
+
+    // בניית HTML להדפסה - עיצוב נקי ורשמי
+    const quoteHTML = `
+      <html dir="rtl">
+        <head>
+          <title>הצעת מחיר - La Hilula</title>
+          <style>
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; color: #333; max-width: 800px; margin: 0 auto; }
+            .header { text-align: center; border-bottom: 2px solid #C48F65; padding-bottom: 20px; margin-bottom: 30px; }
+            .logo { font-size: 30px; font-weight: bold; color: #C48F65; text-transform: uppercase; letter-spacing: 2px; }
+            .details { display: flex; justify-content: space-between; background: #f9f9f9; p: 20px; border-radius: 10px; margin-bottom: 30px; }
+            .col { flex: 1; }
+            .label { font-weight: bold; font-size: 14px; color: #888; margin-bottom: 5px; }
+            .value { font-size: 18px; font-weight: bold; margin-bottom: 15px; }
+            table { w: 100%; border-collapse: collapse; margin-bottom: 30px; }
+            th { text-align: right; padding: 15px; border-bottom: 2px solid #eee; color: #C48F65; }
+            td { padding: 15px; border-bottom: 1px solid #eee; }
+            .total-row { font-size: 24px; font-weight: bold; color: #C48F65; text-align: left; margin-top: 30px; }
+            .footer { text-align: center; margin-top: 50px; font-size: 12px; color: #888; border-top: 1px solid #eee; pt: 20px; }
+            @media print { body { padding: 0; } .no-print { display: none; } }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <div class="logo">La Hilula</div>
+            <div style="margin-top: 10px; font-size: 14px;">מטבח בוטיק וקייטרינג לאירועים</div>
+            <div style="margin-top: 5px;">050-666-9062</div>
+          </div>
+
+          <div class="details">
+            <div class="col">
+              <div class="label">לכבוד</div>
+              <div class="value">${info.name}</div>
+              <div class="label">תאריך הפקה</div>
+              <div class="value">${new Date().toLocaleDateString('he-IL')}</div>
+            </div>
+            <div class="col">
+              <div class="label">מיקום האירוע</div>
+              <div class="value">${info.address}</div>
+              <div class="label">מספר משתתפים</div>
+              <div class="value">${info.guests} אורחים</div>
+            </div>
+          </div>
+
+          <h3>פירוט ההזמנה</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>תיאור הפריט</th>
+                <th>כמות</th>
+                <th>מחיר יחידה</th>
+                <th>סה"כ</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${items.map(i => `
+                <tr>
+                  <td>
+                    <strong>${i.name}</strong>
+                    <div style="font-size: 12px; color: #666;">${i.desc || ''}</div>
+                  </td>
+                  <td>${i.qty}</td>
+                  <td>₪${i.price}</td>
+                  <td>₪${i.total}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+
+          <div class="total-row">
+            סה"כ לתשלום: ₪${subtotal}
+          </div>
+
+          <div class="footer">
+            תודה שבחרתם בנו! La Hilula - אילנית ישראל<br/>
+            ט.ל.ח | הצעת המחיר תקפה ל-14 יום
+          </div>
+
+          <script>window.print();</script>
+        </body>
+      </html>
+    `;
+
+    const win = window.open('', '', 'width=900,height=800');
+    if (win) {
+        win.document.write(quoteHTML);
+        win.document.close();
+    }
   };
 
   const handleCategorySelect = (category: string) => {
@@ -383,11 +469,11 @@ export default function Home() {
 
             <form className="pt-10 space-y-4 pb-10" onSubmit={(e) => e.preventDefault()}>
                 <div>
-                    <label htmlFor="name" className="sr-only">שם מלא</label>
+                    <label htmlFor="name" className="sr-only">שם המזמין</label>
                     <input 
                         id="name"
                         type="text"
-                        placeholder="שם מלא *" 
+                        placeholder="שם המזמין *" 
                         autoComplete="name"
                         aria-invalid={errors.name}
                         className={`w-full bg-[#161616]/90 backdrop-blur-sm border p-5 rounded-2xl outline-none transition-colors placeholder:text-gray-500 focus:ring-2 focus:ring-[#C48F65] ${errors.name ? 'border-red-500/50 ring-1 ring-red-500/30' : 'border-white/10 focus:border-[#D4A5A5]/50'}`} 
@@ -396,15 +482,15 @@ export default function Home() {
                             if(e.target.value) setErrors({...errors, name: false});
                         }} 
                     />
-                    {errors.name && <p role="alert" className="text-red-400 text-xs mt-1 mr-2">נא למלא שם מלא</p>}
+                    {errors.name && <p role="alert" className="text-red-400 text-xs mt-1 mr-2">נא למלא שם המזמין</p>}
                 </div>
 
                 <div>
-                    <label htmlFor="address" className="sr-only">כתובת למשלוח</label>
+                    <label htmlFor="address" className="sr-only">מיקום האירוע / כתובת למשלוח</label>
                     <input 
                         id="address"
                         type="text"
-                        placeholder="כתובת למשלוח *" 
+                        placeholder="מיקום האירוע / כתובת למשלוח *" 
                         autoComplete="street-address"
                         aria-invalid={errors.address}
                         className={`w-full bg-[#161616]/90 backdrop-blur-sm border p-5 rounded-2xl outline-none transition-colors placeholder:text-gray-500 focus:ring-2 focus:ring-[#C48F65] ${errors.address ? 'border-red-500/50 ring-1 ring-red-500/30' : 'border-white/10 focus:border-[#D4A5A5]/50'}`} 
@@ -413,7 +499,24 @@ export default function Home() {
                             if(e.target.value) setErrors({...errors, address: false});
                         }} 
                     />
-                    {errors.address && <p role="alert" className="text-red-400 text-xs mt-1 mr-2">נא למלא כתובת למשלוח</p>}
+                    {errors.address && <p role="alert" className="text-red-400 text-xs mt-1 mr-2">נא למלא מיקום</p>}
+                </div>
+
+                {/* שדה חדש: מספר אורחים */}
+                <div>
+                    <label htmlFor="guests" className="sr-only">מספר אורחים</label>
+                    <input 
+                        id="guests"
+                        type="number"
+                        placeholder="מספר משתתפים באירוע *" 
+                        aria-invalid={errors.guests}
+                        className={`w-full bg-[#161616]/90 backdrop-blur-sm border p-5 rounded-2xl outline-none transition-colors placeholder:text-gray-500 focus:ring-2 focus:ring-[#C48F65] ${errors.guests ? 'border-red-500/50 ring-1 ring-red-500/30' : 'border-white/10 focus:border-[#D4A5A5]/50'}`} 
+                        onChange={e => {
+                            setInfo({...info, guests: e.target.value});
+                            if(e.target.value) setErrors({...errors, guests: false});
+                        }} 
+                    />
+                    {errors.guests && <p role="alert" className="text-red-400 text-xs mt-1 mr-2">נא למלא מספר אורחים</p>}
                 </div>
             </form>
         </div>
@@ -421,19 +524,37 @@ export default function Home() {
         {subtotal > 0 && (
             <div className="fixed bottom-8 left-0 right-0 px-6 z-50">
             <div className="max-w-md mx-auto bg-gradient-to-r from-[#D4A5A5] to-[#C48F65] p-[1px] rounded-[2.5rem] shadow-[0_0_40px_rgba(196,143,101,0.4)]">
-                <div className="bg-[#0d0d0d]/95 backdrop-blur-xl rounded-[2.4rem] p-6 flex items-center justify-between">
-                <div>
-                    <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest mb-1">סה"כ לתשלום</p>
-                    <span className="text-3xl font-black text-white">₪{subtotal}</span>
-                </div>
-                <button 
-                    onClick={send} 
-                    aria-label={`בצע הזמנה בוואטסאפ על סך ${subtotal} שקלים`}
-                    className="bg-white text-black px-6 py-4 rounded-2xl font-black hover:bg-[#C48F65] hover:text-white transition-all shadow-lg flex items-center gap-2 focus:outline-none focus:ring-4 focus:ring-[#C48F65]/50"
-                >
-                    <span>להזמנה</span>
-                    <span className="text-xl" aria-hidden="true">🚀</span>
-                </button>
+                <div className="bg-[#0d0d0d]/95 backdrop-blur-xl rounded-[2.4rem] p-6 flex flex-col gap-4">
+                    
+                    <div className="flex justify-between items-center w-full">
+                        <div>
+                            <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest mb-1">סה"כ לתשלום</p>
+                            <span className="text-3xl font-black text-white">₪{subtotal}</span>
+                        </div>
+                    </div>
+
+                    <div className="flex gap-2 w-full">
+                        {/* כפתור הצעת מחיר */}
+                        <button 
+                            onClick={generateQuote} 
+                            aria-label="הפקת הצעת מחיר להדפסה"
+                            className="flex-1 bg-white/10 border border-white/20 text-white px-4 py-4 rounded-2xl font-bold hover:bg-white/20 transition-all flex justify-center items-center gap-2"
+                        >
+                            <span>הצעת מחיר</span>
+                            <span>📄</span>
+                        </button>
+
+                        {/* כפתור וואטסאפ */}
+                        <button 
+                            onClick={send} 
+                            aria-label={`בצע הזמנה בוואטסאפ על סך ${subtotal} שקלים`}
+                            className="flex-[2] bg-white text-black px-6 py-4 rounded-2xl font-black hover:bg-[#C48F65] hover:text-white transition-all shadow-lg flex justify-center items-center gap-2"
+                        >
+                            <span>להזמנה</span>
+                            <span className="text-xl" aria-hidden="true">🚀</span>
+                        </button>
+                    </div>
+
                 </div>
             </div>
             </div>
