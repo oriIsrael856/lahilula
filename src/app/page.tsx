@@ -242,7 +242,7 @@ export default function Home() {
     });
 
     // תיקון: שימוש בשם המדויק מהצילום מסך שלך (logo.jpg) והוספת בסיס הכתובת
-    const logoUrl = window.location.origin + '/logo.jpg';
+    const logoUrl = window.location.origin + '/logo.jpeg';
 
     const quoteHTML = `
       <html dir="rtl">
