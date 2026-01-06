@@ -19,7 +19,7 @@ const MENU = [
     price: 65, 
     category: "מנות ראשונות", 
     desc: "דג טרי בתיבול עדין, שמן זית, לימון ועשבי תיבול מהגינה", 
-    images: ["/ceviche1.jpg", "/ceviche2.jpg"] 
+    images: ["/ceviche1.jpeg", "/ceviche2.jpeg"] 
   },
   { 
     id: 2, 
@@ -27,7 +27,7 @@ const MENU = [
     price: 58, 
     category: "מנות ראשונות", 
     desc: "גבינות בוטיק, דבש ופירות העונה", 
-    images: ["/bruschetta.jpg"] 
+    images: ["/bruschetta.jpeg"] 
   },
   { id: 21, name: "שקשוקה", price: 50, category: "מנות ראשונות", desc: "פיקנטית עם לחם ביתי", images: [] },
 
@@ -42,7 +42,7 @@ const MENU = [
     price: 2500, 
     category: "עמדות לאירועים", 
     desc: "לאירועים עד 100 איש. כולל הכנה פרונטלית במקום, דבש, חמאה, ריבות ותה מרוקאי.",
-    images: ["/mofletta1.jpg"]
+    images: ["/mofletta1.jpeg"]
   },
 
   // --- מגשי אירוח ---
@@ -52,7 +52,7 @@ const MENU = [
     price: 200, 
     category: "מגשי אירוח", 
     desc: "מגש עשיר עם 20-25 עוגיות מרוקאיות אותנטיות בעבודת יד (מחיר למגש)", 
-    images: ["/cp1.jpeg", "/cp2.jpeg", "/cp3.jpeg"] 
+    images: ["/cookies.jpeg"] 
   },
   { id: 3, name: "לחמניות של אמא", price: 8, category: "מגשי אירוח", desc: "ממולאות במטבוחה ביתית וחצילים (מחיר ליח')", images: [] },
   { id: 4, name: "מיני פריקסה", price: 14, category: "מגשי אירוח", desc: "סנדוויץ' תוניסאי ביס עם כל התוספות (מחיר ליח')", images: [] },
@@ -147,7 +147,6 @@ function MenuItem({ item, qty, update }: { item: any, qty: number, update: (id: 
 export default function Home() {
   const [cart, setCart] = useState<Record<number, number>>({});
   
-  // הוספנו שדה guests למידע
   const [info, setInfo] = useState({ name: '', address: '', guests: '' });
   const [errors, setErrors] = useState({ name: false, address: false, guests: false });
   const [activeCategory, setActiveCategory] = useState("הכל");
@@ -200,7 +199,6 @@ export default function Home() {
     return acc + (item ? item.price * qty : 0);
   }, 0);
 
-  // --- פונקציית ולידציה משותפת ---
   const validate = () => {
     if (subtotal === 0) {
         alert("העגלה ריקה! יש לבחור מנות לפני הפעולה.");
@@ -220,7 +218,6 @@ export default function Home() {
     return true;
   };
 
-  // --- שליחה לוואטסאפ ---
   const send = () => {
     if (!validate()) return;
     
@@ -243,7 +240,9 @@ export default function Home() {
         return { ...item, qty, total: (item?.price || 0) * qty };
     });
 
-    // בניית HTML להדפסה - עיצוב נקי ורשמי
+    // תיקון: יצירת נתיב אבסולוטי ללוגו כדי שיוצג בהדפסה
+    const logoUrl = window.location.origin + '/logo.jpeg';
+
     const quoteHTML = `
       <html dir="rtl">
         <head>
@@ -251,23 +250,24 @@ export default function Home() {
           <style>
             body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; color: #333; max-width: 800px; margin: 0 auto; }
             .header { text-align: center; border-bottom: 2px solid #C48F65; padding-bottom: 20px; margin-bottom: 30px; }
-            .logo { font-size: 30px; font-weight: bold; color: #C48F65; text-transform: uppercase; letter-spacing: 2px; }
-            .details { display: flex; justify-content: space-between; background: #f9f9f9; p: 20px; border-radius: 10px; margin-bottom: 30px; }
+            .logo-img { max-width: 150px; height: auto; margin-bottom: 10px; }
+            .details { display: flex; justify-content: space-between; background: #f9f9f9; padding: 20px; border-radius: 10px; margin-bottom: 30px; }
             .col { flex: 1; }
             .label { font-weight: bold; font-size: 14px; color: #888; margin-bottom: 5px; }
             .value { font-size: 18px; font-weight: bold; margin-bottom: 15px; }
-            table { w: 100%; border-collapse: collapse; margin-bottom: 30px; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
             th { text-align: right; padding: 15px; border-bottom: 2px solid #eee; color: #C48F65; }
             td { padding: 15px; border-bottom: 1px solid #eee; }
             .total-row { font-size: 24px; font-weight: bold; color: #C48F65; text-align: left; margin-top: 30px; }
-            .footer { text-align: center; margin-top: 50px; font-size: 12px; color: #888; border-top: 1px solid #eee; pt: 20px; }
+            .footer { text-align: center; margin-top: 50px; font-size: 12px; color: #888; border-top: 1px solid #eee; padding-top: 20px; }
             @media print { body { padding: 0; } .no-print { display: none; } }
           </style>
         </head>
         <body>
           <div class="header">
-            <div class="logo">La Hilula</div>
-            <div style="margin-top: 10px; font-size: 14px;">מטבח בוטיק וקייטרינג לאירועים</div>
+            <img src="${logoUrl}" alt="La Hilula" class="logo-img" />
+            <div style="font-size: 18px; font-weight: bold; color: #C48F65; margin-top: 5px;">La Hilula</div>
+            <div style="margin-top: 5px; font-size: 14px;">מטבח בוטיק וקייטרינג לאירועים</div>
             <div style="margin-top: 5px;">050-666-9062</div>
           </div>
 
@@ -320,7 +320,12 @@ export default function Home() {
             ט.ל.ח | הצעת המחיר תקפה ל-14 יום
           </div>
 
-          <script>window.print();</script>
+          <script>
+            // ממתינים חצי שנייה לטעינת התמונה ואז מדפיסים
+            setTimeout(() => {
+                window.print();
+            }, 500);
+          </script>
         </body>
       </html>
     `;
@@ -502,7 +507,6 @@ export default function Home() {
                     {errors.address && <p role="alert" className="text-red-400 text-xs mt-1 mr-2">נא למלא מיקום</p>}
                 </div>
 
-                {/* שדה חדש: מספר אורחים */}
                 <div>
                     <label htmlFor="guests" className="sr-only">מספר אורחים</label>
                     <input 
@@ -534,7 +538,6 @@ export default function Home() {
                     </div>
 
                     <div className="flex gap-2 w-full">
-                        {/* כפתור הצעת מחיר */}
                         <button 
                             onClick={generateQuote} 
                             aria-label="הפקת הצעת מחיר להדפסה"
@@ -544,7 +547,6 @@ export default function Home() {
                             <span>📄</span>
                         </button>
 
-                        {/* כפתור וואטסאפ */}
                         <button 
                             onClick={send} 
                             aria-label={`בצע הזמנה בוואטסאפ על סך ${subtotal} שקלים`}
