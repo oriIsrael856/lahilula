@@ -1,7 +1,7 @@
 "use client";
 import { useState, useMemo, useEffect, useRef } from 'react';
 
-// --- תמונות רקע ---
+// --- תמונות רקע (לפי צילום המסך שלך: bg1.jpeg) ---
 const BG_IMAGES = [
   "/bg1.jpeg", "/bg2.jpeg", "/bg3.jpeg", "/bg4.jpeg",
   "/bg5.jpeg", "/bg6.jpeg", "/bg7.jpeg", "/bg8.jpeg",
@@ -10,7 +10,7 @@ const BG_IMAGES = [
 
 const CATEGORIES = ["הכל", "מנות ראשונות", "מגשי אירוח", "עמדות לאירועים", "פסטות ועיקריות", "מאפים"];
 
-// --- הגדרת המנות ---
+// --- הגדרת המנות (שילבתי את קבצי ה-mp וה-cp שלך) ---
 const MENU = [
   // --- מנות ראשונות ---
   { 
@@ -19,7 +19,8 @@ const MENU = [
     price: 65, 
     category: "מנות ראשונות", 
     desc: "דג טרי בתיבול עדין, שמן זית, לימון ועשבי תיבול מהגינה", 
-    images: ["/ceviche1.jpeg", "/ceviche2.jpeg"] 
+    // השתמשתי בקבצים הקיימים שלך mp1, mp2
+    images: ["/mp1.jpeg", "/mp2.jpeg"] 
   },
   { 
     id: 2, 
@@ -27,13 +28,13 @@ const MENU = [
     price: 58, 
     category: "מנות ראשונות", 
     desc: "גבינות בוטיק, דבש ופירות העונה", 
-    images: ["/bruschetta.jpeg"] 
+    images: ["/mp3.jpeg"] 
   },
   { id: 21, name: "שקשוקה", price: 50, category: "מנות ראשונות", desc: "פיקנטית עם לחם ביתי", images: [] },
 
   // --- מאפים ---
-  { id: 5, name: "קיש בטטה (משפחתי)", price: 65, category: "מאפים", desc: "בצק פריך במילוי שמנת ובטטה", images: ["/quiche_batata.jpg"] },
-  { id: 6, name: "קיש תפ''א ופטריות (משפחתי)", price: 65, category: "מאפים", desc: "שילוב קלאסי של תפוחי אדמה ופטריות טריות", images: ["/quiche_mushroom.jpg"] },
+  { id: 5, name: "קיש בטטה (משפחתי)", price: 65, category: "מאפים", desc: "בצק פריך במילוי שמנת ובטטה", images: ["/cp1.jpeg"] },
+  { id: 6, name: "קיש תפ''א ופטריות (משפחתי)", price: 65, category: "מאפים", desc: "שילוב קלאסי של תפוחי אדמה ופטריות טריות", images: ["/cp2.jpeg"] },
 
   // --- עמדות לאירועים ---
   { 
@@ -42,7 +43,7 @@ const MENU = [
     price: 2500, 
     category: "עמדות לאירועים", 
     desc: "לאירועים עד 100 איש. כולל הכנה פרונטלית במקום, דבש, חמאה, ריבות ותה מרוקאי.",
-    images: ["/mofletta1.jpeg"]
+    images: ["/mp4.jpeg"] 
   },
 
   // --- מגשי אירוח ---
@@ -52,7 +53,7 @@ const MENU = [
     price: 200, 
     category: "מגשי אירוח", 
     desc: "מגש עשיר עם 20-25 עוגיות מרוקאיות אותנטיות בעבודת יד (מחיר למגש)", 
-    images: ["/cookies.jpeg"] 
+    images: ["/cp3.jpeg"] 
   },
   { id: 3, name: "לחמניות של אמא", price: 8, category: "מגשי אירוח", desc: "ממולאות במטבוחה ביתית וחצילים (מחיר ליח')", images: [] },
   { id: 4, name: "מיני פריקסה", price: 14, category: "מגשי אירוח", desc: "סנדוויץ' תוניסאי ביס עם כל התוספות (מחיר ליח')", images: [] },
@@ -65,8 +66,8 @@ const MENU = [
   { id: 15, name: "קרואסון סלמון", price: 16, category: "מגשי אירוח", desc: "במילוי גבינת שמנת וסלמון מעושן (מחיר ליח')", images: [] },
   
   // מגשים גדולים
-  { id: 12, name: "מגש אנטיפסטי", price: 180, category: "מגשי אירוח", desc: "ירקות קלויים בתנור (מחיר למגש גדול)", images: ["/antipasti.jpg"] },
-  { id: 13, name: "מגש גבינות מפנק", price: 250, category: "מגשי אירוח", desc: "גבינות קשות ורכות, פירות ואגוזים (מחיר למגש)", images: ["/cheese_platter.jpg"] },
+  { id: 12, name: "מגש אנטיפסטי", price: 180, category: "מגשי אירוח", desc: "ירקות קלויים בתנור (מחיר למגש גדול)", images: [] },
+  { id: 13, name: "מגש גבינות מפנק", price: 250, category: "מגשי אירוח", desc: "גבינות קשות ורכות, פירות ואגוזים (מחיר למגש)", images: [] },
 
   // --- פסטות ועיקריות ---
   { id: 17, name: "קוסקוס של סבתא", price: 50, category: "פסטות ועיקריות", desc: "עבודת יד עם מרק ירקות עשיר (מנה אישית)", images: [] },
@@ -240,8 +241,8 @@ export default function Home() {
         return { ...item, qty, total: (item?.price || 0) * qty };
     });
 
-    // תיקון: יצירת נתיב אבסולוטי ללוגו כדי שיוצג בהדפסה
-    const logoUrl = window.location.origin + '/logo.jpeg';
+    // תיקון: שימוש בשם המדויק מהצילום מסך שלך (logo.jpg) והוספת בסיס הכתובת
+    const logoUrl = window.location.origin + '/logo.jpg';
 
     const quoteHTML = `
       <html dir="rtl">
@@ -250,7 +251,8 @@ export default function Home() {
           <style>
             body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; color: #333; max-width: 800px; margin: 0 auto; }
             .header { text-align: center; border-bottom: 2px solid #C48F65; padding-bottom: 20px; margin-bottom: 30px; }
-            .logo-img { max-width: 150px; height: auto; margin-bottom: 10px; }
+            /* הוספתי הגדרות עימוד ברורות ללוגו */
+            .logo-img { max-width: 150px; height: auto; margin-bottom: 10px; display: block; margin: 0 auto; }
             .details { display: flex; justify-content: space-between; background: #f9f9f9; padding: 20px; border-radius: 10px; margin-bottom: 30px; }
             .col { flex: 1; }
             .label { font-weight: bold; font-size: 14px; color: #888; margin-bottom: 5px; }
@@ -265,7 +267,8 @@ export default function Home() {
         </head>
         <body>
           <div class="header">
-            <img src="${logoUrl}" alt="La Hilula" class="logo-img" />
+            <img src="${logoUrl}" alt="La Hilula" class="logo-img" onload="setTimeout(function(){window.print()}, 500)" onerror="console.error('Logo failed to load'); window.print();" />
+            
             <div style="font-size: 18px; font-weight: bold; color: #C48F65; margin-top: 5px;">La Hilula</div>
             <div style="margin-top: 5px; font-size: 14px;">מטבח בוטיק וקייטרינג לאירועים</div>
             <div style="margin-top: 5px;">050-666-9062</div>
@@ -319,13 +322,6 @@ export default function Home() {
             תודה שבחרתם בנו! La Hilula - אילנית ישראל<br/>
             ט.ל.ח | הצעת המחיר תקפה ל-14 יום
           </div>
-
-          <script>
-            // ממתינים חצי שנייה לטעינת התמונה ואז מדפיסים
-            setTimeout(() => {
-                window.print();
-            }, 500);
-          </script>
         </body>
       </html>
     `;
@@ -349,7 +345,7 @@ export default function Home() {
         דלג לתוכן המרכזי
       </a>
 
-      {/* תמונות רקע כלליות */}
+      {/* תמונות רקע כלליות - מעודכן ל-jpeg */}
       <div className="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
         <div className="absolute inset-0 bg-black/70 z-10"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-[#0d0d0d] via-transparent to-[#0d0d0d] z-20"></div>
