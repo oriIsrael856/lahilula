@@ -76,7 +76,7 @@ const MENU = [
   { id: 18, name: "פסטה רוזה", price: 52, category: "פסטות ועיקריות", desc: "רוטב עגבניות ושמנת קטיפתי", images: [] },
   { id: 19, name: "פסטה שמנת פטריות", price: 52, category: "פסטות ועיקריות", desc: "רוטב עשיר עם פטריות טריות", images: [] },
   { id: 20, name: "פסטה ירקות", price: 48, category: "פסטות ועיקריות", desc: "בשמן זית, שום ועשבי תיבול", images: ["/bg12.jpeg"] },
-  { id: 22, name: "תפו''א מוקרם", price: 55, category: "פסטות ועיקריות", desc: "בשמנת וגבינות", images: [] },
+  { id: 22, name: "תפו''א מוקרם", price: 55, category: "פסטות ועיקריות", desc: "בשמנת וגבינות", images: ["/bg11.jpeg"] },
   { id: 23, name: "תפו''א/בטטה בתנור", price: 45, category: "פסטות ועיקריות", desc: "פלחי ירקות שורש צלויים", images: [] }
 ];
 
