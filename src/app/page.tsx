@@ -182,17 +182,21 @@ export default function Home() {
 
     setCart(prev => {
       const currentQty = prev[id] || 0;
-      let newQty = currentQty + delta;
       
+      // 1. בדיקה האם זה פריט שצריך לקפוץ ב-30
       const isBulkItem = item.category === "מגשי אירוח" 
         && !item.name.includes("מגש אנטיפסטי") 
         && !item.name.includes("מגש גבינות")
         && !item.name.includes("מגש עוגיות");
 
-      if (isBulkItem) {
-        if (currentQty === 0 && delta > 0) return { ...prev, [id]: 30 };
-        if (newQty < 30) return { ...prev, [id]: 0 };
-      }
+      // 2. קביעת גודל הקפיצה: אם זה Bulk הקפיצה היא 30, אחרת 1
+      const step = isBulkItem ? 30 : 1;
+
+      // 3. חישוב הכמות החדשה
+      // אנחנו מכפילים את ה-delta (שהוא פלוס/מינוס 1) בגודל הקפיצה
+      const newQty = currentQty + (delta * step);
+
+      // החזרת הערך החדש (עם הגנה שלא ירד מתחת לאפס)
       return { ...prev, [id]: Math.max(0, newQty) };
     });
   };
