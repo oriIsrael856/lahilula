@@ -8,7 +8,8 @@ const BG_IMAGES = [
   "/bg9.jpeg", "/bg10.jpeg", "/bg11.jpeg", "/bg12.jpeg", "/bg13.jpeg"
 ];
 
-const CATEGORIES = ["הכל", "מנות ראשונות", "מגשי אירוח", "עמדות לאירועים", "פסטות ועיקריות", "מאפים"];
+// הוספתי את "סלטים" לרשימת הקטגוריות
+const CATEGORIES = ["הכל", "מנות ראשונות", "סלטים", "מגשי אירוח", "עמדות לאירועים", "פסטות ועיקריות", "מאפים"];
 
 // --- הגדרת המנות ---
 const MENU = [
@@ -31,6 +32,48 @@ const MENU = [
   },
   { id: 21, name: "שקשוקה", price: 150, category: "מנות ראשונות", desc: "פיקנטית עם לחם ביתי", images: ["/bg9.jpeg"] },
   { id: 26, name: "חציל בלאדי על האש", price: 50, category: "מנות ראשונות", desc: "ליבת חציל מעושנת בתיבול שמן זית כתית, מזולפת בטחינה גולמית ורכז רימונים. מוגשת עם פרוסות צ'ילי טרי, צנונית פריכה ועשבי תיבול לרעננות.", images: ["/egplant.jpeg"] },
+
+  // --- סלטים (החלק החדש שהוספנו) ---
+  { 
+    id: 30, 
+    name: "קרפצ'ו סלק", 
+    price: 80, 
+    category: "סלטים", 
+    desc: "פרוסות סלק דקיקות בתיבול בלסמי מצומצם, גבינת פטה מגורדת ובצל ירוק קצוץ", 
+    images: ["/selek.jpeg"] // הוסף תמונה כאן
+  },
+  { 
+    id: 31, 
+    name: "סלט שרי חריף", 
+    price: 120, 
+    category: "סלטים", 
+    desc: "עגבניות שרי צבעוניות, שום כתוש, כוסברה טרייה ופלפל חריף אש (כמות סועדים עד 20 איש)", 
+    images: ["/garlicTomatos.jpeg"] // הוסף תמונה כאן
+  },
+  { 
+    id: 32, 
+    name: "חסה בוטנים ופקאן", 
+    price: 120, 
+    category: "סלטים", 
+    desc: "לבבות חסה רעננים עם בוטנים ופקאנים מסוכרים ברוטב ויניגרט חמוץ מתוק (כמות סועדים עד 20 איש)", 
+    images: ["/chasa.jpeg"] // הוסף תמונה כאן
+  },
+  { 
+    id: 33, 
+    name: "סלק לימוני", 
+    price: 120, 
+    category: "סלטים", 
+    desc: "קוביות סלק בתיבול רענן עם אגוזים ולימון כבוש (כמות סועדים עד 20 איש)", 
+    images: ["/lemonSelek.jpeg"] // הוסף תמונה כאן
+  },
+  { 
+    id: 34, 
+    name: "סלט פסטה פסטו", 
+    price: 120, 
+    category: "סלטים", 
+    desc: "פסטה קרה ברוטב פסטו בזיליקום ביתי, זיתי קלמטה ועגבניות שרי (כמות סועדים עד 20 איש)", 
+    images: ["pastaPesto.jpeg"] // הוסף תמונה כאן
+  },
 
   // --- מאפים ---
   { id: 5, name: "קיש בטטה (משפחתי)", price: 120, category: "מאפים", desc: "בצק פריך במילוי שמנת ובטטה", images: [] },
@@ -57,8 +100,8 @@ const MENU = [
   },
   { id: 3, name: "לחמניות של אמא", price: 8, category: "מגשי אירוח", desc: "ממולאות במטבוחה ביתית וחצילים (מחיר ליח')", images: ["/buns.jpeg", "/bg4.jpeg", "/bg5.jpeg"] },
   { id: 4, name: "מיני פריקסה", price: 14, category: "מגשי אירוח", desc: "סנדוויץ' תוניסאי ביס עם כל התוספות (מחיר ליח')", images: ["/frikase.jpeg"] },
-  { id: 7, name: "מיני קישים", price: 9, category: "מגשי אירוח", desc: "מבחר טעמים: בצל/פטריות/בטטה", images: [] },
-  { id: 8, name: "מיני טורטיה", price: 12, category: "מגשי אירוח", desc: "מגולגלות עם ממרחים וירקות קלויים", images: ["/tortias.jpeg"] },
+  { id: 7, name: "מיני קישים", price: 9, category: "מגשי אירוח", desc: "מבחר טעמים: בצל/פטריות/בטטה (מחיר ליח')", images: [] },
+  { id: 8, name: "מיני טורטיה", price: 12, category: "מגשי אירוח", desc: "מגולגלות עם ממרחים וירקות קלויים (מחיר ליח')", images: ["/tortias.jpeg"] },
   { id: 9, name: "מיני פוקאצ'ה", price: 10, category: "מגשי אירוח", desc: "עם ירקות אנטיפסטי ושמן זית", images: [] },
   { id: 10, name: "לביבות תפ''א (לטקס)", price: 6, category: "מגשי אירוח", desc: "זהובות ופריכות", images: [] },
   { id: 11, name: "סושי (יחידה)", price: 5, category: "מגשי אירוח", desc: "צמחוני/דג בציפויים מיוחדים", images: [] },
@@ -484,7 +527,6 @@ export default function Home() {
 
                     <div className="relative z-10 flex flex-col h-full overflow-y-auto custom-scrollbar">
                         <div className="p-8 md:p-16 text-center max-w-2xl mx-auto">
-                            {/* תמונת פרופיל גם כאן */}
                             <div className="w-32 h-32 mx-auto rounded-full border-4 border-[#C48F65] shadow-2xl overflow-hidden mb-8">
                                 <img src="/profile.png" alt="אילנית" className="w-full h-full object-cover" />
                             </div>
