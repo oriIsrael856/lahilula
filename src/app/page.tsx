@@ -1,7 +1,7 @@
 "use client";
 import { useState, useMemo, useEffect, useRef } from 'react';
 
-// --- תמונות רקע (לפי צילום המסך שלך: bg1.jpeg) ---
+// --- תמונות רקע ---
 const BG_IMAGES = [
   "/bg1.jpeg", "/bg2.jpeg", "/bg3.jpeg", "/bg4.jpeg",
   "/bg5.jpeg", "/bg6.jpeg", "/bg7.jpeg", "/bg8.jpeg",
@@ -10,7 +10,7 @@ const BG_IMAGES = [
 
 const CATEGORIES = ["הכל", "מנות ראשונות", "מגשי אירוח", "עמדות לאירועים", "פסטות ועיקריות", "מאפים"];
 
-// --- הגדרת המנות (שילבתי את קבצי ה-mp וה-cp שלך) ---
+// --- הגדרת המנות ---
 const MENU = [
   // --- מנות ראשונות ---
   { 
@@ -19,7 +19,6 @@ const MENU = [
     price: 65, 
     category: "מנות ראשונות", 
     desc: "דג טרי בתיבול עדין, שמן זית, לימון ועשבי תיבול מהגינה", 
-    // השתמשתי בקבצים הקיימים שלך mp1, mp2
     images: [] 
   },
   { 
@@ -32,7 +31,6 @@ const MENU = [
   },
   { id: 21, name: "שקשוקה", price: 150, category: "מנות ראשונות", desc: "פיקנטית עם לחם ביתי", images: ["/bg9.jpeg"] },
   { id: 26, name: "חציל בלאדי על האש", price: 50, category: "מנות ראשונות", desc: "ליבת חציל מעושנת בתיבול שמן זית כתית, מזולפת בטחינה גולמית ורכז רימונים. מוגשת עם פרוסות צ'ילי טרי, צנונית פריכה ועשבי תיבול לרעננות.", images: ["/egplant.jpeg"] },
-
 
   // --- מאפים ---
   { id: 5, name: "קיש בטטה (משפחתי)", price: 120, category: "מאפים", desc: "בצק פריך במילוי שמנת ובטטה", images: [] },
@@ -59,13 +57,13 @@ const MENU = [
   },
   { id: 3, name: "לחמניות של אמא", price: 8, category: "מגשי אירוח", desc: "ממולאות במטבוחה ביתית וחצילים (מחיר ליח')", images: ["/buns.jpeg", "/bg4.jpeg", "/bg5.jpeg"] },
   { id: 4, name: "מיני פריקסה", price: 14, category: "מגשי אירוח", desc: "סנדוויץ' תוניסאי ביס עם כל התוספות (מחיר ליח')", images: ["/frikase.jpeg"] },
-  { id: 7, name: "מיני קישים", price: 9, category: "מגשי אירוח", desc: "מבחר טעמים: בצל/פטריות/בטטה (מחיר ליח')", images: [] },
-  { id: 8, name: "מיני טורטיה", price: 12, category: "מגשי אירוח", desc: "מגולגלות עם ממרחים וירקות קלויים (מחיר ליח')", images: ["/tortias.jpeg"] },
-  { id: 9, name: "מיני פוקאצ'ה", price: 10, category: "מגשי אירוח", desc: "עם ירקות אנטיפסטי ושמן זית (מחיר ליח')", images: [] },
-  { id: 10, name: "לביבות תפ''א (לטקס)", price: 6, category: "מגשי אירוח", desc: "זהובות ופריכות (מחיר ליח')", images: [] },
-  { id: 11, name: "סושי (יחידה)", price: 5, category: "מגשי אירוח", desc: "צמחוני/דג בציפויים מיוחדים (מחיר ליח')", images: [] },
-  { id: 14, name: "מיני פיתה סביח", price: 14, category: "מגשי אירוח", desc: "ביס מושלם עם חציל, ביצה וטחינה (מחיר ליח')", images: [] },
-  { id: 15, name: "קרואסון סלמון", price: 16, category: "מגשי אירוח", desc: "במילוי גבינת שמנת וסלמון מעושן (מחיר ליח')", images: [] },
+  { id: 7, name: "מיני קישים", price: 9, category: "מגשי אירוח", desc: "מבחר טעמים: בצל/פטריות/בטטה", images: [] },
+  { id: 8, name: "מיני טורטיה", price: 12, category: "מגשי אירוח", desc: "מגולגלות עם ממרחים וירקות קלויים", images: ["/tortias.jpeg"] },
+  { id: 9, name: "מיני פוקאצ'ה", price: 10, category: "מגשי אירוח", desc: "עם ירקות אנטיפסטי ושמן זית", images: [] },
+  { id: 10, name: "לביבות תפ''א (לטקס)", price: 6, category: "מגשי אירוח", desc: "זהובות ופריכות", images: [] },
+  { id: 11, name: "סושי (יחידה)", price: 5, category: "מגשי אירוח", desc: "צמחוני/דג בציפויים מיוחדים", images: [] },
+  { id: 14, name: "מיני פיתה סביח", price: 14, category: "מגשי אירוח", desc: "ביס מושלם עם חציל, ביצה וטחינה", images: [] },
+  { id: 15, name: "קרואסון סלמון", price: 16, category: "מגשי אירוח", desc: "במילוי גבינת שמנת וסלמון מעושן", images: [] },
   
   // מגשים גדולים
   { id: 12, name: "מגש אנטיפסטי", price: 180, category: "מגשי אירוח", desc: "ירקות קלויים בתנור (מחיר למגש גדול)", images: [] },
@@ -149,12 +147,12 @@ function MenuItem({ item, qty, update }: { item: any, qty: number, update: (id: 
 // --- הרכיב הראשי ---
 export default function Home() {
   const [cart, setCart] = useState<Record<number, number>>({});
-  
   const [info, setInfo] = useState({ name: '', address: '', guests: '' });
   const [errors, setErrors] = useState({ name: false, address: false, guests: false });
   const [activeCategory, setActiveCategory] = useState("הכל");
   const [bgIndex, setBgIndex] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showAbout, setShowAbout] = useState(false); 
   
   const menuRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -183,20 +181,14 @@ export default function Home() {
     setCart(prev => {
       const currentQty = prev[id] || 0;
       
-      // 1. בדיקה האם זה פריט שצריך לקפוץ ב-30
       const isBulkItem = item.category === "מגשי אירוח" 
         && !item.name.includes("מגש אנטיפסטי") 
         && !item.name.includes("מגש גבינות")
         && !item.name.includes("מגש עוגיות");
 
-      // 2. קביעת גודל הקפיצה: אם זה Bulk הקפיצה היא 30, אחרת 1
       const step = isBulkItem ? 30 : 1;
-
-      // 3. חישוב הכמות החדשה
-      // אנחנו מכפילים את ה-delta (שהוא פלוס/מינוס 1) בגודל הקפיצה
       const newQty = currentQty + (delta * step);
 
-      // החזרת הערך החדש (עם הגנה שלא ירד מתחת לאפס)
       return { ...prev, [id]: Math.max(0, newQty) };
     });
   };
@@ -238,7 +230,6 @@ export default function Home() {
     window.open(`https://wa.me/972506669062?text=${encodeURIComponent(text)}`);
   };
 
-  // --- יצירת הצעת מחיר (PDF/Print) ---
   const generateQuote = () => {
     if (!validate()) return;
 
@@ -247,7 +238,6 @@ export default function Home() {
         return { ...item, qty, total: (item?.price || 0) * qty };
     });
 
-    // תיקון: שימוש בשם המדויק מהצילום מסך שלך (logo.jpg) והוספת בסיס הכתובת
     const logoUrl = window.location.origin + '/logo.jpg';
 
     const quoteHTML = `
@@ -257,7 +247,6 @@ export default function Home() {
           <style>
             body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; color: #333; max-width: 800px; margin: 0 auto; }
             .header { text-align: center; border-bottom: 2px solid #C48F65; padding-bottom: 20px; margin-bottom: 30px; }
-            /* הוספתי הגדרות עימוד ברורות ללוגו */
             .logo-img { max-width: 150px; height: auto; margin-bottom: 10px; display: block; margin: 0 auto; }
             .details { display: flex; justify-content: space-between; background: #f9f9f9; padding: 20px; border-radius: 10px; margin-bottom: 30px; }
             .col { flex: 1; }
@@ -274,12 +263,10 @@ export default function Home() {
         <body>
           <div class="header">
             <img src="${logoUrl}" alt="La Hilula" class="logo-img" onload="setTimeout(function(){window.print()}, 500)" onerror="console.error('Logo failed to load'); window.print();" />
-            
             <div style="font-size: 18px; font-weight: bold; color: #C48F65; margin-top: 5px;">La Hilula</div>
             <div style="margin-top: 5px; font-size: 14px;">מטבח בוטיק וקייטרינג לאירועים</div>
             <div style="margin-top: 5px;">050-666-9062</div>
           </div>
-
           <div class="details">
             <div class="col">
               <div class="label">לכבוד</div>
@@ -294,7 +281,6 @@ export default function Home() {
               <div class="value">${info.guests} אורחים</div>
             </div>
           </div>
-
           <h3>פירוט ההזמנה</h3>
           <table>
             <thead>
@@ -319,15 +305,8 @@ export default function Home() {
               `).join('')}
             </tbody>
           </table>
-
-          <div class="total-row">
-            סה"כ לתשלום: ₪${subtotal}
-          </div>
-
-          <div class="footer">
-            תודה שבחרתם בנו! La Hilula - אילנית ישראל<br/>
-            ט.ל.ח | הצעת המחיר תקפה ל-14 יום
-          </div>
+          <div class="total-row">סה"כ לתשלום: ₪${subtotal}</div>
+          <div class="footer">תודה שבחרתם בנו! La Hilula - אילנית ישראל<br/>ט.ל.ח | הצעת המחיר תקפה ל-14 יום</div>
         </body>
       </html>
     `;
@@ -351,7 +330,6 @@ export default function Home() {
         דלג לתוכן המרכזי
       </a>
 
-      {/* תמונות רקע כלליות - מעודכן ל-jpeg */}
       <div className="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
         <div className="absolute inset-0 bg-black/70 z-10"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-[#0d0d0d] via-transparent to-[#0d0d0d] z-20"></div>
@@ -438,6 +416,17 @@ export default function Home() {
                     </div>
 
                     <nav className="space-y-4">
+                        {/* כפתור הסיפור שלי בתפריט */}
+                        <button
+                            onClick={() => {
+                                setIsMenuOpen(false);
+                                setShowAbout(true);
+                            }}
+                            className="w-full text-right p-4 rounded-xl text-lg font-bold transition-all focus:outline-none focus:ring-2 focus:ring-[#C48F65] text-[#C48F65] hover:bg-white/5 border border-[#C48F65]/30 mb-4"
+                        >
+                            הסיפור שלי 📖
+                        </button>
+
                         {CATEGORIES.filter(cat => cat !== "הכל").map(cat => (
                             <button
                                 key={cat}
@@ -460,7 +449,114 @@ export default function Home() {
             </div>
         )}
 
+        {/* --- חלון אודות מלא (Modal) --- */}
+        {showAbout && (
+            <div 
+                className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-8"
+                role="dialog"
+                aria-modal="true"
+            >
+                <div 
+                    className="absolute inset-0 bg-black/90 backdrop-blur-md transition-opacity"
+                    onClick={() => setShowAbout(false)}
+                ></div>
+                
+                <div className="relative w-full max-w-4xl h-[85vh] bg-[#1a1a1a] rounded-[2.5rem] overflow-hidden flex flex-col shadow-2xl border border-[#C48F65]/20 animate-fadeIn">
+                    
+                    {/* תמונת רקע ענקית למודאל */}
+                    <div className="absolute inset-0 z-0">
+                        <img 
+                            src="/about-bg.jpeg" // וודא שיש קובץ בשם הזה ב-public
+                            alt="רקע אודות" 
+                            className="w-full h-full object-cover opacity-30"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] via-[#1a1a1a]/80 to-transparent"></div>
+                    </div>
+
+                    <button 
+                        onClick={() => setShowAbout(false)}
+                        className="absolute top-6 left-6 z-20 bg-white/10 p-2 rounded-full hover:bg-white/20 transition-colors text-white"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+
+                    <div className="relative z-10 flex flex-col h-full overflow-y-auto custom-scrollbar">
+                        <div className="p-8 md:p-16 text-center max-w-2xl mx-auto">
+                            {/* תמונת פרופיל גם כאן */}
+                            <div className="w-32 h-32 mx-auto rounded-full border-4 border-[#C48F65] shadow-2xl overflow-hidden mb-8">
+                                <img src="/profile.png" alt="אילנית" className="w-full h-full object-cover" />
+                            </div>
+
+                            <h2 className="text-4xl md:text-5xl font-black text-white mb-2">המסע שלי</h2>
+                            <p className="text-[#C48F65] text-lg font-bold tracking-widest uppercase mb-8">מהמטבח של אמא אליכם</p>
+
+                            <div className="space-y-6 text-gray-300 text-lg leading-relaxed text-right md:text-center font-light">
+                                <p>
+                                    המסע הקולינרי שלי לא התחיל בבתי ספר גבוהים לבישול בפריז, וגם לא במסעדות יוקרה. 
+                                    הוא התחיל במקום הכי חם, אמיתי ומלא נשמה שיש – 
+                                    <strong className="text-white font-bold"> המטבח של אמא.</strong>
+                                </p>
+                                <p>
+                                    גדלתי בבית מרוקאי שבו האוכל הוא השפה הרשמית. אמא שלי, אישה עם ידי זהב ולב ענק, לימדה אותי שבישול לא עושים עם כוסות מדידה או משקלים, אלא עם הרגש. היא לימדה אותי להקשיב לסיר, להרגיש את הבצק בקצות האצבעות, ולדעת בדיוק מתי התבלינים נפתחים ומשחררים את הקסם שלהם.
+                                </p>
+                                <p>
+                                    היום, ב-<strong>La Hilula</strong>, אני מביאה את כל הידע העתיק הזה, שעבר מדור לדור, ומשלבת אותו עם אסתטיקה מודרנית ואירוח ברמה הגבוהה ביותר. כל מגש שיוצא מהמטבח שלי, כל עוגייה וכל סיר קוסקוס, נעשים באותה אהבה ותשומת לב שאמא שלי הייתה נותנת לארוחת שישי.
+                                </p>
+                                <p>
+                                    עבורי, האוכל הוא רק התירוץ – המטרה האמיתית היא לשמח אנשים, לחבר ביניהם, ולייצר רגעים של אושר טהור.
+                                    <br/>
+                                    <span className="text-[#C48F65] font-bold block mt-4 text-xl">בתיאבון, אילנית.</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )}
+
         <div id="main-content" className="max-w-xl mx-auto space-y-4 mt-8">
+            
+            {/* --- החלק הקבוע בדף הראשי (עיצוב חדש ומורחב) --- */}
+            <section className="mb-12 px-4" aria-labelledby="about-heading">
+                {/* שינוי: הוספתי כאן את התמונה כרקע עם גובה מינימלי (min-h-[400px])
+                    כדי שתהיה גדולה ומרשימה כמו שביקשת.
+                */}
+                <div className="relative w-full rounded-3xl overflow-hidden shadow-2xl group min-h-[450px] flex flex-col items-center justify-center p-8 border border-[#C48F65]/30">
+                    
+                    {/* תמונת הרקע הגדולה */}
+                    <div className="absolute inset-0">
+                        <img 
+                            src="/about-bg.jpeg" 
+                            alt="רקע המטבח" 
+                            className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105" 
+                        />
+                        {/* שכבת כהות כדי שהטקסט יהיה קריא */}
+                        <div className="absolute inset-0 bg-black/70 group-hover:bg-black/60 transition-colors duration-700"></div>
+                    </div>
+
+                    {/* התוכן מעל התמונה */}
+                    <div className="relative z-10 text-center max-w-lg">
+                        
+                        {/* תמונת הפרופיל העגולה */}
+                        <div className="w-28 h-28 mx-auto rounded-full border-2 border-[#C48F65] shadow-xl overflow-hidden mb-6">
+                            <img src="/profile.png" alt="אילנית ישראל" className="w-full h-full object-cover" />
+                        </div>
+
+                        <h2 id="about-heading" className="text-3xl font-black text-white mb-3 tracking-wide">
+                            נעים להכיר, <span className="text-[#C48F65]">אילנית</span>
+                        </h2>
+                        
+                        <p className="text-gray-200 leading-relaxed text-lg font-light drop-shadow-md">
+                            "המסע שלי התחיל במטבח של אמא, בין ריחות התבלינים והחום של הבית. היום אני מביאה אליכם את אותה אהבה, בכל מגש ובכל ביס."
+                        </p>
+
+                        <div className="mt-6 w-16 h-1 bg-[#C48F65] mx-auto rounded-full"></div>
+                    </div>
+                </div>
+            </section>
+
             <h2 className="text-center text-[#C48F65] text-sm font-bold mb-4 tracking-widest uppercase">
                 {activeCategory === "הכל" ? "כל המנות" : activeCategory}
             </h2>
