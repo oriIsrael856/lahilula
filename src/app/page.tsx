@@ -8,7 +8,7 @@ const BG_IMAGES = [
   "/bg9.jpeg", "/bg10.jpeg", "/bg11.jpeg", "/bg12.jpeg", "/bg13.jpeg"
 ];
 
-// הוספתי את "סלטים" לרשימת הקטגוריות
+// הקטגוריות, כולל סלטים
 const CATEGORIES = ["הכל", "מנות ראשונות", "סלטים", "מגשי אירוח", "עמדות לאירועים", "פסטות ועיקריות", "מאפים"];
 
 // --- הגדרת המנות ---
@@ -30,17 +30,31 @@ const MENU = [
     desc: "גבינות בוטיק, דבש ופירות העונה", 
     images: [] 
   },
-  { id: 21, name: "שקשוקה", price: 150, category: "מנות ראשונות", desc: "פיקנטית עם לחם ביתי", images: ["/bg9.jpeg"] },
-  { id: 26, name: "חציל בלאדי על האש", price: 50, category: "מנות ראשונות", desc: "ליבת חציל מעושנת בתיבול שמן זית כתית, מזולפת בטחינה גולמית ורכז רימונים. מוגשת עם פרוסות צ'ילי טרי, צנונית פריכה ועשבי תיבול לרעננות.", images: ["/egplant.jpeg"] },
+  { 
+    id: 21, 
+    name: "שקשוקה", 
+    price: 150, 
+    category: "מנות ראשונות", 
+    desc: "פיקנטית עם לחם ביתי", 
+    images: ["/bg9.jpeg"] 
+  },
+  { 
+    id: 26, 
+    name: "חציל בלאדי על האש", 
+    price: 50, 
+    category: "מנות ראשונות", 
+    desc: "ליבת חציל מעושנת בתיבול שמן זית כתית, מזולפת בטחינה גולמית ורכז רימונים. מוגשת עם פרוסות צ'ילי טרי, צנונית פריכה ועשבי תיבול לרעננות.", 
+    images: ["/egplant.jpeg"] 
+  },
 
-  // --- סלטים (החלק החדש שהוספנו) ---
+  // --- סלטים (החדשים) ---
   { 
     id: 30, 
     name: "קרפצ'ו סלק", 
     price: 80, 
     category: "סלטים", 
     desc: "פרוסות סלק דקיקות בתיבול בלסמי מצומצם, גבינת פטה מגורדת ובצל ירוק קצוץ", 
-    images: ["/selek.jpeg"] // הוסף תמונה כאן
+    images: ["/selek.jpeg"] 
   },
   { 
     id: 31, 
@@ -48,7 +62,7 @@ const MENU = [
     price: 120, 
     category: "סלטים", 
     desc: "עגבניות שרי צבעוניות, שום כתוש, כוסברה טרייה ופלפל חריף אש (כמות סועדים עד 20 איש)", 
-    images: ["/garlicTomatos.jpeg"] // הוסף תמונה כאן
+    images: ["/garlicTomatos.jpeg"] 
   },
   { 
     id: 32, 
@@ -56,7 +70,7 @@ const MENU = [
     price: 120, 
     category: "סלטים", 
     desc: "לבבות חסה רעננים עם בוטנים ופקאנים מסוכרים ברוטב ויניגרט חמוץ מתוק (כמות סועדים עד 20 איש)", 
-    images: ["/chasa.jpeg"] // הוסף תמונה כאן
+    images: ["/chasa.jpeg"] 
   },
   { 
     id: 33, 
@@ -64,7 +78,7 @@ const MENU = [
     price: 120, 
     category: "סלטים", 
     desc: "קוביות סלק בתיבול רענן עם אגוזים ולימון כבוש (כמות סועדים עד 20 איש)", 
-    images: ["/lemonSelek.jpeg"] // הוסף תמונה כאן
+    images: ["/lemonSelek.jpeg"] 
   },
   { 
     id: 34, 
@@ -72,12 +86,26 @@ const MENU = [
     price: 120, 
     category: "סלטים", 
     desc: "פסטה קרה ברוטב פסטו בזיליקום ביתי, זיתי קלמטה ועגבניות שרי (כמות סועדים עד 20 איש)", 
-    images: ["pastaPesto.jpeg"] // הוסף תמונה כאן
+    images: ["pastaPesto.jpeg"] 
   },
 
   // --- מאפים ---
-  { id: 5, name: "קיש בטטה (משפחתי)", price: 120, category: "מאפים", desc: "בצק פריך במילוי שמנת ובטטה", images: [] },
-  { id: 6, name: "קיש תפ''א ופטריות (משפחתי)", price: 65, category: "מאפים", desc: "שילוב קלאסי של תפוחי אדמה ופטריות טריות", images: ["/bg13.jpeg"] },
+  { 
+    id: 5, 
+    name: "קיש בטטה (משפחתי)", 
+    price: 120, 
+    category: "מאפים", 
+    desc: "בצק פריך במילוי שמנת ובטטה", 
+    images: [] 
+  },
+  { 
+    id: 6, 
+    name: "קיש תפ''א ופטריות (משפחתי)", 
+    price: 65, 
+    category: "מאפים", 
+    desc: "שילוב קלאסי של תפוחי אדמה ופטריות טריות", 
+    images: ["/bg13.jpeg"] 
+  },
 
   // --- עמדות לאירועים ---
   { 
@@ -98,27 +126,160 @@ const MENU = [
     desc: "מגש עשיר עם 20-25 עוגיות מרוקאיות אותנטיות בעבודת יד (מחיר למגש)", 
     images: ["/cp1.jpeg", "/cp2.jpeg", "/cp3.jpeg"] 
   },
-  { id: 3, name: "לחמניות של אמא", price: 8, category: "מגשי אירוח", desc: "ממולאות במטבוחה ביתית וחצילים (מחיר ליח')", images: ["/buns.jpeg", "/bg4.jpeg", "/bg5.jpeg"] },
-  { id: 4, name: "מיני פריקסה", price: 14, category: "מגשי אירוח", desc: "סנדוויץ' תוניסאי ביס עם כל התוספות (מחיר ליח')", images: ["/frikase.jpeg"] },
-  { id: 7, name: "מיני קישים", price: 9, category: "מגשי אירוח", desc: "מבחר טעמים: בצל/פטריות/בטטה (מחיר ליח')", images: [] },
-  { id: 8, name: "מיני טורטיה", price: 12, category: "מגשי אירוח", desc: "מגולגלות עם ממרחים וירקות קלויים (מחיר ליח')", images: ["/tortias.jpeg"] },
-  { id: 9, name: "מיני פוקאצ'ה", price: 10, category: "מגשי אירוח", desc: "עם ירקות אנטיפסטי ושמן זית", images: [] },
-  { id: 10, name: "לביבות תפ''א (לטקס)", price: 6, category: "מגשי אירוח", desc: "זהובות ופריכות", images: [] },
-  { id: 11, name: "סושי (יחידה)", price: 5, category: "מגשי אירוח", desc: "צמחוני/דג בציפויים מיוחדים", images: [] },
-  { id: 14, name: "מיני פיתה סביח", price: 14, category: "מגשי אירוח", desc: "ביס מושלם עם חציל, ביצה וטחינה", images: [] },
-  { id: 15, name: "קרואסון סלמון", price: 16, category: "מגשי אירוח", desc: "במילוי גבינת שמנת וסלמון מעושן", images: [] },
-  
-  // מגשים גדולים
-  { id: 12, name: "מגש אנטיפסטי", price: 180, category: "מגשי אירוח", desc: "ירקות קלויים בתנור (מחיר למגש גדול)", images: [] },
-  { id: 13, name: "מגש גבינות מפנק", price: 250, category: "מגשי אירוח", desc: "גבינות קשות ורכות, פירות ואגוזים (מחיר למגש)", images: [] },
+  { 
+    id: 40, 
+    name: "פחזניה רגילה", 
+    price: 4.25, 
+    category: "מגשי אירוח", 
+    desc: "פחזניות קלאסיות במילוי קרם עשיר ומפנק (מחיר ליח')", 
+    images: [] 
+  },
+  { 
+    id: 41, 
+    name: "פחזניית קראמבל", 
+    price: 6, 
+    category: "מגשי אירוח", 
+    desc: "פחזניה בציפוי קראמבל פריך ובמילוי עשיר (מחיר ליח')", 
+    images: ["/cramblePahzania.jpeg"] 
+  },
+  { 
+    id: 3, 
+    name: "לחמניות של אמא", 
+    price: 8, 
+    category: "מגשי אירוח", 
+    desc: "ממולאות במטבוחה ביתית וחצילים (מחיר ליח')", 
+    images: ["/buns.jpeg", "/bg4.jpeg", "/bg5.jpeg"] 
+  },
+  { 
+    id: 4, 
+    name: "מיני פריקסה", 
+    price: 14, 
+    category: "מגשי אירוח", 
+    desc: "סנדוויץ' תוניסאי ביס עם כל התוספות (מחיר ליח')", 
+    images: ["/frikase.jpeg"] 
+  },
+  { 
+    id: 7, 
+    name: "מיני קישים", 
+    price: 9, 
+    category: "מגשי אירוח", 
+    desc: "מבחר טעמים: בצל/פטריות/בטטה (מחיר ליח')", 
+    images: [] 
+  },
+  { 
+    id: 8, 
+    name: "מיני טורטיה", 
+    price: 12, 
+    category: "מגשי אירוח", 
+    desc: "מגולגלות עם ממרחים וירקות קלויים (מחיר ליח')", 
+    images: ["/tortias.jpeg"] 
+  },
+  { 
+    id: 9, 
+    name: "מיני פוקאצ'ה", 
+    price: 10, 
+    category: "מגשי אירוח", 
+    desc: "עם ירקות אנטיפסטי ושמן זית (מחיר ליח')", 
+    images: [] 
+  },
+  { 
+    id: 10, 
+    name: "לביבות תפ''א (לטקס)", 
+    price: 6, 
+    category: "מגשי אירוח", 
+    desc: "זהובות ופריכות (מחיר ליח')", 
+    images: [] 
+  },
+  { 
+    id: 11, 
+    name: "סושי (יחידה)", 
+    price: 5, 
+    category: "מגשי אירוח", 
+    desc: "צמחוני/דג בציפויים מיוחדים (מחיר ליח')", 
+    images: [] 
+  },
+  { 
+    id: 14, 
+    name: "מיני פיתה סביח", 
+    price: 14, 
+    category: "מגשי אירוח", 
+    desc: "ביס מושלם עם חציל, ביצה וטחינה (מחיר ליח')", 
+    images: [] 
+  },
+  { 
+    id: 15, 
+    name: "קרואסון סלמון", 
+    price: 16, 
+    category: "מגשי אירוח", 
+    desc: "במילוי גבינת שמנת וסלמון מעושן (מחיר ליח')", 
+    images: [] 
+  },
+  { 
+    id: 12, 
+    name: "מגש אנטיפסטי", 
+    price: 180, 
+    category: "מגשי אירוח", 
+    desc: "ירקות קלויים בתנור (מחיר למגש גדול)", 
+    images: [] 
+  },
+  { 
+    id: 13, 
+    name: "מגש גבינות מפנק", 
+    price: 250, 
+    category: "מגשי אירוח", 
+    desc: "גבינות קשות ורכות, פירות ואגוזים (מחיר למגש)", 
+    images: [] 
+  },
 
   // --- פסטות ועיקריות ---
-  { id: 17, name: "קוסקוס של סבתא", price: 50, category: "פסטות ועיקריות", desc: "עבודת יד עם מרק ירקות עשיר (מנה אישית)", images: ["/cuscus.jpeg", "/bg13.jpeg"] },
-  { id: 18, name: "פסטה רוזה", price: 180, category: "פסטות ועיקריות", desc: "רוטב עגבניות ושמנת קטיפתי", images: [] },
-  { id: 19, name: "פסטה שמנת פטריות", price: 180, category: "פסטות ועיקריות", desc: "רוטב עשיר עם פטריות טריות", images: [] },
-  { id: 20, name: "פסטה ירקות", price: 180, category: "פסטות ועיקריות", desc: "בשמן זית, שום ועשבי תיבול", images: ["/bg12.jpeg"] },
-  { id: 22, name: "תפו''א מוקרם", price: 150, category: "פסטות ועיקריות", desc: "בשמנת וגבינות", images: ["/bg11.jpeg"] },
-  { id: 23, name: "תפו''א/בטטה בתנור", price: 150, category: "פסטות ועיקריות", desc: "פלחי ירקות שורש צלויים", images: [] }
+  { 
+    id: 17, 
+    name: "קוסקוס של סבתא", 
+    price: 50, 
+    category: "פסטות ועיקריות", 
+    desc: "עבודת יד עם מרק ירקות עשיר (מנה אישית)", 
+    images: ["/cuscus.jpeg", "/bg13.jpeg"] 
+  },
+  { 
+    id: 18, 
+    name: "פסטה רוזה", 
+    price: 180, 
+    category: "פסטות ועיקריות", 
+    desc: "רוטב עגבניות ושמנת קטיפתי", 
+    images: [] 
+  },
+  { 
+    id: 19, 
+    name: "פסטה שמנת פטריות", 
+    price: 180, 
+    category: "פסטות ועיקריות", 
+    desc: "רוטב עשיר עם פטריות טריות", 
+    images: [] 
+  },
+  { 
+    id: 20, 
+    name: "פסטה ירקות", 
+    price: 180, 
+    category: "פסטות ועיקריות", 
+    desc: "בשמן זית, שום ועשבי תיבול", 
+    images: ["/bg12.jpeg"] 
+  },
+  { 
+    id: 22, 
+    name: "תפו''א מוקרם", 
+    price: 150, 
+    category: "פסטות ועיקריות", 
+    desc: "בשמנת וגבינות", 
+    images: ["/bg11.jpeg"] 
+  },
+  { 
+    id: 23, 
+    name: "תפו''א/בטטה בתנור", 
+    price: 150, 
+    category: "פסטות ועיקריות", 
+    desc: "פלחי ירקות שורש צלויים", 
+    images: [] 
+  }
 ];
 
 // --- רכיב כרטיס מנה ---
@@ -506,7 +667,6 @@ export default function Home() {
                 
                 <div className="relative w-full max-w-4xl h-[85vh] bg-[#1a1a1a] rounded-[2.5rem] overflow-hidden flex flex-col shadow-2xl border border-[#C48F65]/20 animate-fadeIn">
                     
-                    {/* תמונת רקע ענקית למודאל */}
                     <div className="absolute inset-0 z-0">
                         <img 
                             src="/about-bg.jpeg" // וודא שיש קובץ בשם הזה ב-public
@@ -560,28 +720,20 @@ export default function Home() {
 
         <div id="main-content" className="max-w-xl mx-auto space-y-4 mt-8">
             
-            {/* --- החלק הקבוע בדף הראשי (עיצוב חדש ומורחב) --- */}
+            {/* --- החלק הקבוע בדף הראשי --- */}
             <section className="mb-12 px-4" aria-labelledby="about-heading">
-                {/* שינוי: הוספתי כאן את התמונה כרקע עם גובה מינימלי (min-h-[400px])
-                    כדי שתהיה גדולה ומרשימה כמו שביקשת.
-                */}
                 <div className="relative w-full rounded-3xl overflow-hidden shadow-2xl group min-h-[450px] flex flex-col items-center justify-center p-8 border border-[#C48F65]/30">
                     
-                    {/* תמונת הרקע הגדולה */}
                     <div className="absolute inset-0">
                         <img 
                             src="/about-bg.jpeg" 
                             alt="רקע המטבח" 
                             className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105" 
                         />
-                        {/* שכבת כהות כדי שהטקסט יהיה קריא */}
                         <div className="absolute inset-0 bg-black/70 group-hover:bg-black/60 transition-colors duration-700"></div>
                     </div>
 
-                    {/* התוכן מעל התמונה */}
                     <div className="relative z-10 text-center max-w-lg">
-                        
-                        {/* תמונת הפרופיל העגולה */}
                         <div className="w-28 h-28 mx-auto rounded-full border-2 border-[#C48F65] shadow-xl overflow-hidden mb-6">
                             <img src="/profile.png" alt="אילנית ישראל" className="w-full h-full object-cover" />
                         </div>
