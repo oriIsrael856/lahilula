@@ -8,7 +8,7 @@ const BG_IMAGES = [
   "/bg9.jpeg", "/bg10.jpeg", "/bg11.jpeg", "/bg12.jpeg", "/bg13.jpeg"
 ];
 
-// הקטגוריות, כולל סלטים
+// הקטגוריות
 const CATEGORIES = ["הכל", "מנות ראשונות", "סלטים", "מגשי אירוח", "עמדות לאירועים", "פסטות ועיקריות", "מאפים"];
 
 // --- הגדרת המנות ---
@@ -47,7 +47,7 @@ const MENU = [
     images: ["/egplant.jpeg"] 
   },
 
-  // --- סלטים (החדשים) ---
+  // --- סלטים ---
   { 
     id: 30, 
     name: "קרפצ'ו סלק", 
@@ -88,6 +88,14 @@ const MENU = [
     desc: "פסטה קרה ברוטב פסטו בזיליקום ביתי, זיתי קלמטה ועגבניות שרי (כמות סועדים עד 20 איש)", 
     images: ["pastaPesto.jpeg"] 
   },
+  { 
+    id: 44, 
+    name: "כרוב סיני עם חמוציות ושומשום", 
+    price: 120, 
+    category: "סלטים", 
+    desc: "סלט כרוב רענן, מתקתק וקראנצ'י (כמות סועדים עד 20 איש)", 
+    images: [] 
+  },
 
   // --- מאפים ---
   { 
@@ -106,6 +114,14 @@ const MENU = [
     desc: "שילוב קלאסי של תפוחי אדמה ופטריות טריות", 
     images: ["/bg13.jpeg"] 
   },
+  { 
+    id: 42, 
+    name: "קובנה עם רטבים", 
+    price: 100, 
+    category: "מאפים", 
+    desc: "מאפה בצק אוורירי ורך הנאפה באיטיות, מוגש עם רטבים מסורתיים", 
+    images: [] 
+  },
 
   // --- עמדות לאירועים ---
   { 
@@ -115,6 +131,14 @@ const MENU = [
     category: "עמדות לאירועים", 
     desc: "לאירועים עד 100 איש. כולל הכנה פרונטלית במקום, דבש, חמאה, ריבות ותה מרוקאי.",
     images: ["/mp1.jpeg", "/mp2.jpeg", "/mp3.jpeg", "/mp4.jpeg"] 
+  },
+  { 
+    id: 45, 
+    name: "סידור שולחן כולל כלים וריפיל", 
+    price: 1500, 
+    category: "עמדות לאירועים", 
+    desc: "שירות פרימיום הכולל עיצוב וסידור השולחן, כלי אוכל והגשה אלגנטיים, ושירות מילוי מחדש (ריפיל) לאורך כל האירוע.", 
+    images: [] 
   },
 
   // --- מגשי אירוח ---
@@ -140,7 +164,7 @@ const MENU = [
     price: 6, 
     category: "מגשי אירוח", 
     desc: "פחזניה בציפוי קראמבל פריך ובמילוי עשיר (מחיר ליח')", 
-    images: ["/cramblePahzania.jpeg"] 
+    images: [] 
   },
   { 
     id: 3, 
@@ -278,6 +302,14 @@ const MENU = [
     price: 150, 
     category: "פסטות ועיקריות", 
     desc: "פלחי ירקות שורש צלויים", 
+    images: [] 
+  },
+  { 
+    id: 43, 
+    name: "סלמון שלם למרכז שולחן", 
+    price: 250, 
+    category: "פסטות ועיקריות", 
+    desc: "נתח סלמון שלם ומרשים, עשוי בתנור ומוגש למרכז השולחן", 
     images: [] 
   }
 ];
@@ -620,7 +652,6 @@ export default function Home() {
                     </div>
 
                     <nav className="space-y-4">
-                        {/* כפתור הסיפור שלי בתפריט */}
                         <button
                             onClick={() => {
                                 setIsMenuOpen(false);
@@ -669,7 +700,7 @@ export default function Home() {
                     
                     <div className="absolute inset-0 z-0">
                         <img 
-                            src="/about-bg.jpeg" // וודא שיש קובץ בשם הזה ב-public
+                            src="/about-bg.jpeg" 
                             alt="רקע אודות" 
                             className="w-full h-full object-cover opacity-30"
                         />
