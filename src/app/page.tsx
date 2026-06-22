@@ -8,8 +8,21 @@ const BG_IMAGES = [
   "/bg9.jpeg", "/bg10.jpeg", "/bg11.jpeg", "/bg12.jpeg", "/bg13.jpeg"
 ];
 
-// הקטגוריות
-const CATEGORIES = ["הכל", "מנות ראשונות", "סלטים", "מגשי אירוח", "עמדות לאירועים", "פסטות ועיקריות", "מאפים"];
+// הקטגוריות — לפי סדר הגשה במעדה
+const CATEGORIES = ["הכל", "סלטים", "מנות ראשונות", "מנות עיקריות", "מטוגנים ונשנושים", "קינוחים ומתוקים", "עמדות לאירועים"];
+
+const SERVING_COURSES = [
+  { title: "סלטים ומנות ראשונות", categories: ["סלטים", "מנות ראשונות"] },
+  { title: "מנות עיקריות", categories: ["מנות עיקריות"] },
+  { title: "מטוגנים ונשנושים", categories: ["מטוגנים ונשנושים"] },
+  { title: "קינוחים ומתוקים", categories: ["קינוחים ומתוקים"] },
+  { title: "עמדות לאירועים", categories: ["עמדות לאירועים"] },
+];
+
+const BULK_ITEM_IDS = new Set([3, 4, 7, 8, 9, 10, 11, 14, 15]);
+
+const isBulkMenuItem = (item: { id: number; category: string }) =>
+  item.category === "מטוגנים ונשנושים" && BULK_ITEM_IDS.has(item.id);
 
 // --- הגדרת המנות ---
 const MENU = [
@@ -45,6 +58,22 @@ const MENU = [
     category: "מנות ראשונות", 
     desc: "ליבת חציל מעושנת בתיבול שמן זית כתית, מזולפת בטחינה גולמית ורכז רימונים. מוגשת עם פרוסות צ'ילי טרי, צנונית פריכה ועשבי תיבול לרעננות.", 
     images: ["/egplant.jpeg"] 
+  },
+  { 
+    id: 12, 
+    name: "מגש אנטיפסטי", 
+    price: 180, 
+    category: "מנות ראשונות", 
+    desc: "ירקות קלויים בתנור (מחיר למגש גדול)", 
+    images: [] 
+  },
+  { 
+    id: 13, 
+    name: "מגש גבינות מפנק", 
+    price: 250, 
+    category: "מנות ראשונות", 
+    desc: "גבינות קשות ורכות, פירות ואגוזים (מחיר למגש)", 
+    images: [] 
   },
 
   // --- סלטים ---
@@ -94,7 +123,7 @@ const MENU = [
     price: 120, 
     category: "סלטים", 
     desc: "חסה, עגבניות שרי, זיתים שחורים וגבינת פטה (כמות סועדים עד 20 איש)", 
-    images: [] 
+    images: ["/greek_salad_is_autoOrient_w.jpg"]
   },
   { 
     id: 36, 
@@ -102,23 +131,39 @@ const MENU = [
     price: 120, 
     category: "סלטים", 
     desc: "ברוטב לימון ודבש עם אגוזי מלך (כמות סועדים עד 20 איש)", 
-    images: [] 
+    images: ["/ceaser0036_i.jpg"]
   },
   { 
     id: 44, 
-    name: "כרוב סיני עם חמוציות ושומשום", 
+    name: "כרוב אסייתי", 
     price: 120, 
     category: "סלטים", 
     desc: "סלט כרוב רענן, מתקתק וקראנצ'י (כמות סועדים עד 20 איש)", 
-    images: [] 
+    images: ["/asian_cabbage_salad_idit_autoOrient_i.jpg"]
+  },
+  { 
+    id: 46, 
+    name: "סלט כרוב עם איולי ועשבי טיבול עם שקד מטוגן", 
+    price: 120, 
+    category: "סלטים", 
+    desc: "סלט כרוב טרי בתיבול איולי, עשבי תיבול ושקד מטוגן (כמות סועדים עד 20 איש)", 
+    images: ["/cabbage_with_almonds.jpg"]
+  },
+  { 
+    id: 47, 
+    name: "סלט קפרזה", 
+    price: 120, 
+    category: "סלטים", 
+    desc: "עגבניות, גבינת מוצרלה, בזיליקום ושמן זית (כמות סועדים עד 20 איש)", 
+    images: ["/capreza_salad.jpg.webp"]
   },
 
-  // --- מאפים ---
+  // --- מטוגנים ונשנושים (מאפים) ---
   { 
     id: 5, 
     name: "קיש בטטה (משפחתי)", 
     price: 120, 
-    category: "מאפים", 
+    category: "מטוגנים ונשנושים", 
     desc: "בצק פריך במילוי שמנת ובטטה", 
     images: [] 
   },
@@ -126,7 +171,7 @@ const MENU = [
     id: 6, 
     name: "קיש תפ''א ופטריות (משפחתי)", 
     price: 65, 
-    category: "מאפים", 
+    category: "מטוגנים ונשנושים", 
     desc: "שילוב קלאסי של תפוחי אדמה ופטריות טריות", 
     images: ["/bg13.jpeg"] 
   },
@@ -134,7 +179,7 @@ const MENU = [
     id: 42, 
     name: "קובנה עם רטבים", 
     price: 100, 
-    category: "מאפים", 
+    category: "מטוגנים ונשנושים", 
     desc: "מאפה בצק אוורירי ורך הנאפה באיטיות, מוגש עם רטבים מסורתיים", 
     images: [] 
   },
@@ -157,12 +202,12 @@ const MENU = [
     images: [] 
   },
 
-  // --- מגשי אירוח ---
+  // --- קינוחים ומתוקים ---
   { 
     id: 25, 
     name: "מגש עוגיות מרוקאיות", 
     price: 200, 
-    category: "מגשי אירוח", 
+    category: "קינוחים ומתוקים", 
     desc: "מגש עשיר עם 20-25 עוגיות מרוקאיות אותנטיות בעבודת יד (מחיר למגש)", 
     images: ["/cp1.jpeg", "/cp2.jpeg", "/cp3.jpeg"] 
   },
@@ -170,7 +215,7 @@ const MENU = [
     id: 40, 
     name: "פחזניה רגילה", 
     price: 4.25, 
-    category: "מגשי אירוח", 
+    category: "קינוחים ומתוקים", 
     desc: "פחזניות קלאסיות במילוי קרם עשיר ומפנק (מחיר ליח')", 
     images: [] 
   },
@@ -178,15 +223,17 @@ const MENU = [
     id: 41, 
     name: "פחזניית קראמבל", 
     price: 6, 
-    category: "מגשי אירוח", 
+    category: "קינוחים ומתוקים", 
     desc: "פחזניה בציפוי קראמבל פריך ובמילוי עשיר (מחיר ליח')", 
     images: [] 
   },
+
+  // --- מטוגנים ונשנושים ---
   { 
     id: 3, 
     name: "לחמניות של אמא", 
     price: 8, 
-    category: "מגשי אירוח", 
+    category: "מטוגנים ונשנושים", 
     desc: "ממולאות במטבוחה ביתית וחצילים (מחיר ליח')", 
     images: ["/buns.jpeg", "/bg4.jpeg", "/bg5.jpeg"] 
   },
@@ -194,7 +241,7 @@ const MENU = [
     id: 4, 
     name: "מיני פריקסה", 
     price: 14, 
-    category: "מגשי אירוח", 
+    category: "מטוגנים ונשנושים", 
     desc: "סנדוויץ' תוניסאי ביס עם כל התוספות (מחיר ליח')", 
     images: ["/frikase.jpeg"] 
   },
@@ -202,7 +249,7 @@ const MENU = [
     id: 7, 
     name: "מיני קישים", 
     price: 9, 
-    category: "מגשי אירוח", 
+    category: "מטוגנים ונשנושים", 
     desc: "מבחר טעמים: בצל/פטריות/בטטה (מחיר ליח')", 
     images: [] 
   },
@@ -210,7 +257,7 @@ const MENU = [
     id: 8, 
     name: "מיני טורטיה", 
     price: 12, 
-    category: "מגשי אירוח", 
+    category: "מטוגנים ונשנושים", 
     desc: "מגולגלות עם ממרחים וירקות קלויים (מחיר ליח')", 
     images: ["/tortias.jpeg"] 
   },
@@ -218,7 +265,7 @@ const MENU = [
     id: 9, 
     name: "מיני פוקאצ'ה", 
     price: 10, 
-    category: "מגשי אירוח", 
+    category: "מטוגנים ונשנושים", 
     desc: "עם ירקות אנטיפסטי ושמן זית (מחיר ליח')", 
     images: [] 
   },
@@ -226,7 +273,7 @@ const MENU = [
     id: 10, 
     name: "לביבות תפ''א (לטקס)", 
     price: 6, 
-    category: "מגשי אירוח", 
+    category: "מטוגנים ונשנושים", 
     desc: "זהובות ופריכות (מחיר ליח')", 
     images: [] 
   },
@@ -234,7 +281,7 @@ const MENU = [
     id: 11, 
     name: "סושי (יחידה)", 
     price: 5, 
-    category: "מגשי אירוח", 
+    category: "מטוגנים ונשנושים", 
     desc: "צמחוני/דג בציפויים מיוחדים (מחיר ליח')", 
     images: [] 
   },
@@ -242,7 +289,7 @@ const MENU = [
     id: 14, 
     name: "מיני פיתה סביח", 
     price: 14, 
-    category: "מגשי אירוח", 
+    category: "מטוגנים ונשנושים", 
     desc: "ביס מושלם עם חציל, ביצה וטחינה (מחיר ליח')", 
     images: [] 
   },
@@ -250,33 +297,17 @@ const MENU = [
     id: 15, 
     name: "קרואסון סלמון", 
     price: 16, 
-    category: "מגשי אירוח", 
+    category: "מטוגנים ונשנושים", 
     desc: "במילוי גבינת שמנת וסלמון מעושן (מחיר ליח')", 
     images: [] 
   },
-  { 
-    id: 12, 
-    name: "מגש אנטיפסטי", 
-    price: 180, 
-    category: "מגשי אירוח", 
-    desc: "ירקות קלויים בתנור (מחיר למגש גדול)", 
-    images: [] 
-  },
-  { 
-    id: 13, 
-    name: "מגש גבינות מפנק", 
-    price: 250, 
-    category: "מגשי אירוח", 
-    desc: "גבינות קשות ורכות, פירות ואגוזים (מחיר למגש)", 
-    images: [] 
-  },
 
-  // --- פסטות ועיקריות ---
+  // --- מנות עיקריות ---
   { 
     id: 17, 
     name: "קוסקוס של סבתא", 
     price: 50, 
-    category: "פסטות ועיקריות", 
+    category: "מנות עיקריות", 
     desc: "עבודת יד עם מרק ירקות עשיר (מנה אישית)", 
     images: ["/cuscus.jpeg", "/bg13.jpeg"] 
   },
@@ -284,7 +315,7 @@ const MENU = [
     id: 18, 
     name: "פסטה רוזה", 
     price: 180, 
-    category: "פסטות ועיקריות", 
+    category: "מנות עיקריות", 
     desc: "רוטב עגבניות ושמנת קטיפתי", 
     images: [] 
   },
@@ -292,7 +323,7 @@ const MENU = [
     id: 19, 
     name: "פסטה שמנת פטריות", 
     price: 180, 
-    category: "פסטות ועיקריות", 
+    category: "מנות עיקריות", 
     desc: "רוטב עשיר עם פטריות טריות", 
     images: [] 
   },
@@ -300,7 +331,7 @@ const MENU = [
     id: 20, 
     name: "פסטה ירקות", 
     price: 180, 
-    category: "פסטות ועיקריות", 
+    category: "מנות עיקריות", 
     desc: "בשמן זית, שום ועשבי תיבול", 
     images: ["/bg12.jpeg"] 
   },
@@ -308,7 +339,7 @@ const MENU = [
     id: 22, 
     name: "תפו''א מוקרם", 
     price: 150, 
-    category: "פסטות ועיקריות", 
+    category: "מנות עיקריות", 
     desc: "בשמנת וגבינות", 
     images: ["/bg11.jpeg"] 
   },
@@ -316,7 +347,7 @@ const MENU = [
     id: 23, 
     name: "תפו''א/בטטה בתנור", 
     price: 150, 
-    category: "פסטות ועיקריות", 
+    category: "מנות עיקריות", 
     desc: "פלחי ירקות שורש צלויים", 
     images: [] 
   },
@@ -324,7 +355,7 @@ const MENU = [
     id: 43, 
     name: "סלמון שלם למרכז שולחן", 
     price: 250, 
-    category: "פסטות ועיקריות", 
+    category: "מנות עיקריות", 
     desc: "נתח סלמון שלם ומרשים, עשוי בתנור ומוגש למרכז השולחן", 
     images: [] 
   }
@@ -346,10 +377,7 @@ function MenuItem({ item, qty, update }: { item: any, qty: number, update: (id: 
     return () => clearTimeout(timeout);
   }, [item.images]);
 
-  const isBulkItem = item.category === "מגשי אירוח" 
-      && !item.name.includes("מגש אנטיפסטי") 
-      && !item.name.includes("מגש גבינות")
-      && !item.name.includes("מגש עוגיות");
+  const isBulkItem = isBulkMenuItem(item);
 
   return (
     <article className="bg-[#161616]/90 backdrop-blur-sm rounded-3xl p-4 border border-white/10 flex flex-col sm:flex-row gap-4 group hover:border-[#D4A5A5]/30 transition-all shadow-lg overflow-hidden">
@@ -426,6 +454,13 @@ export default function Home() {
     activeCategory === "הכל" ? MENU : MENU.filter(m => m.category === activeCategory)
   , [activeCategory]);
 
+  const menuByCourse = useMemo(() =>
+    SERVING_COURSES.map(course => ({
+      ...course,
+      items: course.categories.flatMap(cat => MENU.filter(m => m.category === cat)),
+    })).filter(course => course.items.length > 0)
+  , []);
+
   const update = (id: number, delta: number) => {
     const item = MENU.find(i => i.id === id);
     if (!item) return;
@@ -433,10 +468,7 @@ export default function Home() {
     setCart(prev => {
       const currentQty = prev[id] || 0;
       
-      const isBulkItem = item.category === "מגשי אירוח" 
-        && !item.name.includes("מגש אנטיפסטי") 
-        && !item.name.includes("מגש גבינות")
-        && !item.name.includes("מגש עוגיות");
+      const isBulkItem = isBulkMenuItem(item);
 
       const step = isBulkItem ? 30 : 1;
       const newQty = currentQty + (delta * step);
@@ -803,14 +835,32 @@ export default function Home() {
                 {activeCategory === "הכל" ? "כל המנות" : activeCategory}
             </h2>
 
-            {filteredMenu.map(item => (
+            {activeCategory === "הכל" ? (
+              menuByCourse.map(course => (
+                <section key={course.title} className="space-y-4">
+                  <h3 className="text-center text-white text-lg font-bold pt-6 pb-2 border-b border-[#C48F65]/30">
+                    {course.title}
+                  </h3>
+                  {course.items.map(item => (
+                    <MenuItem 
+                      key={item.id} 
+                      item={item} 
+                      qty={cart[item.id] || 0} 
+                      update={update} 
+                    />
+                  ))}
+                </section>
+              ))
+            ) : (
+              filteredMenu.map(item => (
                 <MenuItem 
-                    key={item.id} 
-                    item={item} 
-                    qty={cart[item.id] || 0} 
-                    update={update} 
+                  key={item.id} 
+                  item={item} 
+                  qty={cart[item.id] || 0} 
+                  update={update} 
                 />
-            ))}
+              ))
+            )}
 
             <form className="pt-10 space-y-4 pb-10" onSubmit={(e) => e.preventDefault()}>
                 <div>
