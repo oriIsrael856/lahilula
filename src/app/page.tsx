@@ -9,29 +9,36 @@ const BG_IMAGES = [
 ];
 
 // הקטגוריות — לפי סדר הגשה במעדה
-const CATEGORIES = ["הכל", "סלטים", "מנות ראשונות", "מנות עיקריות", "מטוגנים ונשנושים", "קינוחים ומתוקים", "עמדות לאירועים"];
+const CATEGORIES = ["הכל", "סלטים", "מנות פתיחה", "עיקריות ופסטות", "סנדוויצ'ים ומטוגנים", "בצקים", "קוסקוס", "קינוחים ומתוקים", "עמדות", "עיצוב שולחן"];
 
 const SERVING_COURSES = [
-  { title: "סלטים ומנות ראשונות", categories: ["סלטים", "מנות ראשונות"] },
-  { title: "מנות עיקריות", categories: ["מנות עיקריות"] },
-  { title: "מטוגנים ונשנושים", categories: ["מטוגנים ונשנושים"] },
+  { title: "סלטים", categories: ["סלטים"] },
+  { title: "מנות פתיחה", categories: ["מנות פתיחה"] },
+  { title: "עיקריות ופסטות", categories: ["עיקריות ופסטות"] },
+  { title: "סנדוויצ'ים ומטוגנים", categories: ["סנדוויצ'ים ומטוגנים"] },
+  { title: "בצקים", categories: ["בצקים"] },
+  { title: "קוסקוס", categories: ["קוסקוס"] },
   { title: "קינוחים ומתוקים", categories: ["קינוחים ומתוקים"] },
-  { title: "עמדות לאירועים", categories: ["עמדות לאירועים"] },
+  { title: "עמדות", categories: ["עמדות"] },
+  { title: "עיצוב שולחן", categories: ["עיצוב שולחן"] },
 ];
 
 const BULK_ITEM_IDS = new Set([3, 4, 7, 8, 9, 10, 11, 14, 15]);
+const COUSCOUS_ITEM_IDS = new Set([17, 48]);
+const COUSCOUS_DEFAULT_QTY = 30;
 
-const isBulkMenuItem = (item: { id: number; category: string }) =>
-  item.category === "מטוגנים ונשנושים" && BULK_ITEM_IDS.has(item.id);
+const isBulkMenuItem = (item: { id: number }) => BULK_ITEM_IDS.has(item.id);
+
+const isCouscousItem = (item: { id: number }) => COUSCOUS_ITEM_IDS.has(item.id);
 
 // --- הגדרת המנות ---
 const MENU = [
-  // --- מנות ראשונות ---
+  // --- מנות פתיחה ---
   { 
     id: 1, 
     name: "סביצ'ה דג", 
     price: 65, 
-    category: "מנות ראשונות", 
+    category: "מנות פתיחה", 
     desc: "דג טרי בתיבול עדין, שמן זית, לימון ועשבי תיבול מהגינה", 
     images: [] 
   },
@@ -39,23 +46,23 @@ const MENU = [
     id: 2, 
     name: "ברוסקטת גבינות", 
     price: 58, 
-    category: "מנות ראשונות", 
+    category: "מנות פתיחה", 
     desc: "גבינות בוטיק, דבש ופירות העונה", 
     images: [] 
   },
   { 
-    id: 21, 
-    name: "שקשוקה", 
-    price: 150, 
-    category: "מנות ראשונות", 
-    desc: "פיקנטית עם לחם ביתי", 
-    images: ["/bg9.jpeg"] 
+    id: 11, 
+    name: "סושי (יחידה)", 
+    price: 5, 
+    category: "מנות פתיחה", 
+    desc: "צמחוני/דג בציפויים מיוחדים (מחיר ליח')", 
+    images: [] 
   },
   { 
     id: 26, 
     name: "חציל בלאדי על האש", 
     price: 50, 
-    category: "מנות ראשונות", 
+    category: "מנות פתיחה", 
     desc: "ליבת חציל מעושנת בתיבול שמן זית כתית, מזולפת בטחינה גולמית ורכז רימונים. מוגשת עם פרוסות צ'ילי טרי, צנונית פריכה ועשבי תיבול לרעננות.", 
     images: ["/egplant.jpeg"] 
   },
@@ -63,7 +70,7 @@ const MENU = [
     id: 12, 
     name: "מגש אנטיפסטי", 
     price: 180, 
-    category: "מנות ראשונות", 
+    category: "מנות פתיחה", 
     desc: "ירקות קלויים בתנור (מחיר למגש גדול)", 
     images: [] 
   },
@@ -71,7 +78,7 @@ const MENU = [
     id: 13, 
     name: "מגש גבינות מפנק", 
     price: 250, 
-    category: "מנות ראשונות", 
+    category: "מנות פתיחה", 
     desc: "גבינות קשות ורכות, פירות ואגוזים (מחיר למגש)", 
     images: [] 
   },
@@ -158,46 +165,114 @@ const MENU = [
     images: ["/capreza_salad.jpg.webp"]
   },
 
-  // --- מטוגנים ונשנושים (מאפים) ---
+  // --- בצקים ---
   { 
     id: 5, 
     name: "קיש בטטה (משפחתי)", 
     price: 120, 
-    category: "מטוגנים ונשנושים", 
+    category: "בצקים", 
     desc: "בצק פריך במילוי שמנת ובטטה", 
     images: [] 
   },
   { 
     id: 6, 
     name: "קיש תפ''א ופטריות (משפחתי)", 
-    price: 65, 
-    category: "מטוגנים ונשנושים", 
+    price: 120,
+    category: "בצקים", 
     desc: "שילוב קלאסי של תפוחי אדמה ופטריות טריות", 
-    images: ["/bg13.jpeg"] 
+    images: [] 
   },
   { 
     id: 42, 
     name: "קובנה עם רטבים", 
     price: 100, 
-    category: "מטוגנים ונשנושים", 
+    category: "בצקים", 
     desc: "מאפה בצק אוורירי ורך הנאפה באיטיות, מוגש עם רטבים מסורתיים", 
     images: [] 
   },
+  { 
+    id: 7, 
+    name: "מיני קישים", 
+    price: 9, 
+    category: "בצקים", 
+    desc: "מבחר טעמים: בצל/פטריות/בטטה (מחיר ליח')", 
+    images: [] 
+  },
+  { 
+    id: 8, 
+    name: "מיני טורטיה", 
+    price: 12, 
+    category: "בצקים", 
+    desc: "מגולגלות עם ממרחים וירקות קלויים (מחיר ליח')", 
+    images: ["/tortias.jpeg"] 
+  },
+  { 
+    id: 9, 
+    name: "מיני פוקאצ'ה", 
+    price: 10, 
+    category: "בצקים", 
+    desc: "עם ירקות אנטיפסטי ושמן זית (מחיר ליח')", 
+    images: [] 
+  },
+  { 
+    id: 15, 
+    name: "קרואסון סלמון", 
+    price: 16, 
+    category: "בצקים", 
+    desc: "במילוי גבינת שמנת וסלמון מעושן (מחיר ליח')", 
+    images: [] 
+  },
 
-  // --- עמדות לאירועים ---
+  // --- סנדוויצ'ים ומטוגנים ---
+  { 
+    id: 3, 
+    name: "לחמניות של אמא", 
+    price: 8, 
+    category: "סנדוויצ'ים ומטוגנים", 
+    desc: "ממולאות במטבוחה ביתית וחצילים (מחיר ליח')", 
+    images: ["/buns.jpeg", "/bg4.jpeg", "/bg5.jpeg"] 
+  },
+  { 
+    id: 4, 
+    name: "מיני פריקסה", 
+    price: 14, 
+    category: "סנדוויצ'ים ומטוגנים", 
+    desc: "סנדוויץ' תוניסאי ביס עם כל התוספות (מחיר ליח')", 
+    images: ["/frikase.jpeg"] 
+  },
+  { 
+    id: 10, 
+    name: "לביבות תפ''א (לטקס)", 
+    price: 6, 
+    category: "סנדוויצ'ים ומטוגנים", 
+    desc: "זהובות ופריכות (מחיר ליח')", 
+    images: [] 
+  },
+  { 
+    id: 14, 
+    name: "מיני פיתה סביח", 
+    price: 14, 
+    category: "סנדוויצ'ים ומטוגנים", 
+    desc: "ביס מושלם עם חציל, ביצה וטחינה (מחיר ליח')", 
+    images: [] 
+  },
+
+  // --- עמדות ---
   { 
     id: 24, 
     name: "עמדת מופלטות וספינג'", 
     price: 2500, 
-    category: "עמדות לאירועים", 
+    category: "עמדות", 
     desc: "לאירועים עד 100 איש. כולל הכנה פרונטלית במקום, דבש, חמאה, ריבות ותה מרוקאי.",
     images: ["/mp1.jpeg", "/mp2.jpeg", "/mp3.jpeg", "/mp4.jpeg"] 
   },
+
+  // --- עיצוב שולחן ---
   { 
     id: 45, 
     name: "סידור שולחן כולל כלים וריפיל", 
     price: 1500, 
-    category: "עמדות לאירועים", 
+    category: "עיצוב שולחן", 
     desc: "שירות פרימיום הכולל עיצוב וסידור השולחן, כלי אוכל והגשה אלגנטיים, ושירות מילוי מחדש (ריפיל) לאורך כל האירוע.", 
     images: [] 
   },
@@ -228,94 +303,12 @@ const MENU = [
     images: [] 
   },
 
-  // --- מטוגנים ונשנושים ---
-  { 
-    id: 3, 
-    name: "לחמניות של אמא", 
-    price: 8, 
-    category: "מטוגנים ונשנושים", 
-    desc: "ממולאות במטבוחה ביתית וחצילים (מחיר ליח')", 
-    images: ["/buns.jpeg", "/bg4.jpeg", "/bg5.jpeg"] 
-  },
-  { 
-    id: 4, 
-    name: "מיני פריקסה", 
-    price: 14, 
-    category: "מטוגנים ונשנושים", 
-    desc: "סנדוויץ' תוניסאי ביס עם כל התוספות (מחיר ליח')", 
-    images: ["/frikase.jpeg"] 
-  },
-  { 
-    id: 7, 
-    name: "מיני קישים", 
-    price: 9, 
-    category: "מטוגנים ונשנושים", 
-    desc: "מבחר טעמים: בצל/פטריות/בטטה (מחיר ליח')", 
-    images: [] 
-  },
-  { 
-    id: 8, 
-    name: "מיני טורטיה", 
-    price: 12, 
-    category: "מטוגנים ונשנושים", 
-    desc: "מגולגלות עם ממרחים וירקות קלויים (מחיר ליח')", 
-    images: ["/tortias.jpeg"] 
-  },
-  { 
-    id: 9, 
-    name: "מיני פוקאצ'ה", 
-    price: 10, 
-    category: "מטוגנים ונשנושים", 
-    desc: "עם ירקות אנטיפסטי ושמן זית (מחיר ליח')", 
-    images: [] 
-  },
-  { 
-    id: 10, 
-    name: "לביבות תפ''א (לטקס)", 
-    price: 6, 
-    category: "מטוגנים ונשנושים", 
-    desc: "זהובות ופריכות (מחיר ליח')", 
-    images: [] 
-  },
-  { 
-    id: 11, 
-    name: "סושי (יחידה)", 
-    price: 5, 
-    category: "מטוגנים ונשנושים", 
-    desc: "צמחוני/דג בציפויים מיוחדים (מחיר ליח')", 
-    images: [] 
-  },
-  { 
-    id: 14, 
-    name: "מיני פיתה סביח", 
-    price: 14, 
-    category: "מטוגנים ונשנושים", 
-    desc: "ביס מושלם עם חציל, ביצה וטחינה (מחיר ליח')", 
-    images: [] 
-  },
-  { 
-    id: 15, 
-    name: "קרואסון סלמון", 
-    price: 16, 
-    category: "מטוגנים ונשנושים", 
-    desc: "במילוי גבינת שמנת וסלמון מעושן (מחיר ליח')", 
-    images: [] 
-  },
-
-  // --- מנות עיקריות ---
-  { 
-    id: 17, 
-    name: "קוסקוס של סבתא", 
-    price: 50, 
-    category: "מנות עיקריות", 
-    desc: "עבודת יד עם מרק ירקות עשיר (מנה אישית)", 
-    images: ["/cuscus.jpeg", "/bg13.jpeg"] 
-  },
+  // --- עיקריות ופסטות ---
   { 
     id: 18, 
     name: "פסטה רוזה", 
     price: 180, 
-    category: "מנות עיקריות", 
+    category: "עיקריות ופסטות", 
     desc: "רוטב עגבניות ושמנת קטיפתי", 
     images: [] 
   },
@@ -323,7 +316,7 @@ const MENU = [
     id: 19, 
     name: "פסטה שמנת פטריות", 
     price: 180, 
-    category: "מנות עיקריות", 
+    category: "עיקריות ופסטות", 
     desc: "רוטב עשיר עם פטריות טריות", 
     images: [] 
   },
@@ -331,7 +324,7 @@ const MENU = [
     id: 20, 
     name: "פסטה ירקות", 
     price: 180, 
-    category: "מנות עיקריות", 
+    category: "עיקריות ופסטות", 
     desc: "בשמן זית, שום ועשבי תיבול", 
     images: ["/bg12.jpeg"] 
   },
@@ -339,7 +332,7 @@ const MENU = [
     id: 22, 
     name: "תפו''א מוקרם", 
     price: 150, 
-    category: "מנות עיקריות", 
+    category: "עיקריות ופסטות", 
     desc: "בשמנת וגבינות", 
     images: ["/bg11.jpeg"] 
   },
@@ -347,23 +340,51 @@ const MENU = [
     id: 23, 
     name: "תפו''א/בטטה בתנור", 
     price: 150, 
-    category: "מנות עיקריות", 
+    category: "עיקריות ופסטות", 
     desc: "פלחי ירקות שורש צלויים", 
     images: [] 
+  },
+  { 
+    id: 21, 
+    name: "שקשוקה", 
+    price: 150, 
+    category: "עיקריות ופסטות", 
+    desc: "פיקנטית עם לחם ביתי", 
+    images: ["/bg9.jpeg"] 
   },
   { 
     id: 43, 
     name: "סלמון שלם למרכז שולחן", 
     price: 250, 
-    category: "מנות עיקריות", 
+    category: "עיקריות ופסטות", 
     desc: "נתח סלמון שלם ומרשים, עשוי בתנור ומוגש למרכז השולחן", 
     images: [] 
+  },
+
+  // --- קוסקוס ---
+  { 
+    id: 17, 
+    name: "קוסקוס של סבתא", 
+    price: 50, 
+    category: "קוסקוס", 
+    desc: "עבודת יד עם מרק ירקות עשיר (₪50 למנה, ברירת מחדל 30 מנות)", 
+    images: ["/cuscus.jpeg", "/bg13.jpeg"] 
+  },
+  { 
+    id: 48, 
+    name: "קוסקוס עם תנזיה", 
+    price: 50, 
+    category: "קוסקוס", 
+    desc: "תבשיל פירות יבשים מרוקאי מתקתק עם זעפרן (₪50 למנה, ברירת מחדל 30 מנות)", 
+    images: ["/cuscus.jpeg", "/bg13.jpeg"] 
   }
 ];
 
 // --- רכיב כרטיס מנה ---
 function MenuItem({ item, qty, update }: { item: any, qty: number, update: (id: number, delta: number) => void }) {
   const [currentImg, setCurrentImg] = useState(0);
+  const isBulkItem = isBulkMenuItem(item);
+  const isCouscous = isCouscousItem(item);
 
   useEffect(() => {
     if (!item.images || item.images.length <= 1) return;
@@ -376,8 +397,6 @@ function MenuItem({ item, qty, update }: { item: any, qty: number, update: (id: 
     }, delay);
     return () => clearTimeout(timeout);
   }, [item.images]);
-
-  const isBulkItem = isBulkMenuItem(item);
 
   return (
     <article className="bg-[#161616]/90 backdrop-blur-sm rounded-3xl p-4 border border-white/10 flex flex-col sm:flex-row gap-4 group hover:border-[#D4A5A5]/30 transition-all shadow-lg overflow-hidden">
@@ -409,14 +428,21 @@ function MenuItem({ item, qty, update }: { item: any, qty: number, update: (id: 
             
             <div className="flex items-end justify-between mt-4">
                 <div className="flex flex-col">
-                    <span className="text-[#C48F65] font-black text-lg" aria-label={`מחיר: ${item.price} שקלים`}>₪{item.price}</span>
+                    <span className="text-[#C48F65] font-black text-lg" aria-label={`מחיר: ${item.price} שקלים${isCouscous ? ' למנה' : ''}`}>
+                      ₪{item.price}{isCouscous && <span className="text-sm font-bold text-gray-400">/מנה</span>}
+                    </span>
+                    {isCouscous && (
+                      <span className="text-[10px] text-[#8BA888] bg-[#8BA888]/10 px-2 py-0.5 rounded-full w-fit mt-1">
+                        ברירת מחדל {COUSCOUS_DEFAULT_QTY} מנות · ₪{item.price * COUSCOUS_DEFAULT_QTY}
+                      </span>
+                    )}
                     {isBulkItem && <span className="text-[10px] text-[#8BA888] bg-[#8BA888]/10 px-2 py-0.5 rounded-full w-fit mt-1">מינימום 30 יח'</span>}
                 </div>
 
                 <div className="flex items-center gap-3 bg-black/60 p-1.5 rounded-2xl border border-white/10">
-                    <button onClick={() => update(item.id, 1)} className="w-10 h-10 bg-gradient-to-br from-[#8BA888] to-[#5F7460] rounded-xl font-bold text-xl active:scale-90 transition-all text-white shadow-[0_0_10px_rgba(139,168,136,0.3)] focus:outline-none focus:ring-2 focus:ring-white">+</button>
-                    <span className="font-black text-lg w-8 text-center" aria-live="polite">{qty || 0}</span>
-                    <button onClick={() => update(item.id, -1)} disabled={!qty} className={`w-10 h-10 bg-[#222] text-gray-400 rounded-xl font-bold text-xl active:scale-90 transition-all focus:outline-none focus:ring-2 focus:ring-white ${qty ? 'opacity-100 hover:bg-white hover:text-black' : 'opacity-20 cursor-not-allowed'}`}>-</button>
+                    <button type="button" onClick={() => update(item.id, 1)} className="w-10 h-10 bg-gradient-to-br from-[#8BA888] to-[#5F7460] rounded-xl font-bold text-xl active:scale-90 transition-all text-white shadow-[0_0_10px_rgba(139,168,136,0.3)] focus:outline-none focus:ring-2 focus:ring-white">+</button>
+                    <span className="font-black text-lg min-w-8 text-center" aria-live="polite">{qty || 0}</span>
+                    <button type="button" onClick={() => update(item.id, -1)} disabled={!qty} className={`w-10 h-10 bg-[#222] text-gray-400 rounded-xl font-bold text-xl active:scale-90 transition-all focus:outline-none focus:ring-2 focus:ring-white ${qty ? 'opacity-100 hover:bg-white hover:text-black' : 'opacity-20 cursor-not-allowed'}`}>-</button>
                 </div>
             </div>
         </div>
@@ -432,7 +458,9 @@ export default function Home() {
   const [activeCategory, setActiveCategory] = useState("הכל");
   const [bgIndex, setBgIndex] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [showAbout, setShowAbout] = useState(false); 
+  const [showAbout, setShowAbout] = useState(false);
+  const [showCartReview, setShowCartReview] = useState(false);
+  const [selectedForDelete, setSelectedForDelete] = useState<Set<number>>(new Set());
   
   const menuRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -467,10 +495,15 @@ export default function Home() {
 
     setCart(prev => {
       const currentQty = prev[id] || 0;
-      
-      const isBulkItem = isBulkMenuItem(item);
 
-      const step = isBulkItem ? 30 : 1;
+      if (isCouscousItem(item)) {
+        if (currentQty === 0 && delta > 0) {
+          return { ...prev, [id]: COUSCOUS_DEFAULT_QTY };
+        }
+        return { ...prev, [id]: Math.max(0, currentQty + delta) };
+      }
+
+      const step = isBulkMenuItem(item) ? 30 : 1;
       const newQty = currentQty + (delta * step);
 
       return { ...prev, [id]: Math.max(0, newQty) };
@@ -481,6 +514,57 @@ export default function Home() {
     const item = MENU.find(i => i.id === Number(id));
     return acc + (item ? item.price * qty : 0);
   }, 0);
+
+  const cartItems = useMemo(() =>
+    Object.entries(cart)
+      .filter(([, qty]) => qty > 0)
+      .map(([id, qty]) => {
+        const item = MENU.find(i => i.id === Number(id));
+        if (!item) return null;
+        return { ...item, qty, total: item.price * qty };
+      })
+      .filter(Boolean) as Array<(typeof MENU)[number] & { qty: number; total: number }>
+  , [cart]);
+
+  const cartItemCount = cartItems.length;
+
+  const toggleCartReview = () => {
+    setShowCartReview(prev => {
+      if (prev) setSelectedForDelete(new Set());
+      return !prev;
+    });
+  };
+
+  const toggleSelectItem = (id: number) => {
+    setSelectedForDelete(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const selectAllCartItems = () => {
+    setSelectedForDelete(new Set(cartItems.map(item => item.id)));
+  };
+
+  const deleteSelectedItems = () => {
+    if (selectedForDelete.size === 0) return;
+    setCart(prev => {
+      const next = { ...prev };
+      selectedForDelete.forEach(id => delete next[id]);
+      return next;
+    });
+    setSelectedForDelete(new Set());
+    setShowCartReview(false);
+  };
+
+  useEffect(() => {
+    if (subtotal === 0) {
+      setShowCartReview(false);
+      setSelectedForDelete(new Set());
+    }
+  }, [subtotal]);
 
   const validate = () => {
     if (subtotal === 0) {
@@ -608,7 +692,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-[#0d0d0d] text-white pb-44 px-4 relative overflow-x-hidden font-sans" dir="rtl">
+    <main className="min-h-screen bg-[#0d0d0d] text-white pb-24 px-4 relative overflow-x-hidden font-sans" dir="rtl">
       
       <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:right-4 bg-[#C48F65] text-white p-4 rounded-xl z-[60] font-bold">
         דלג לתוכן המרכזי
@@ -708,7 +792,7 @@ export default function Home() {
                             }}
                             className="w-full text-right p-4 rounded-xl text-lg font-bold transition-all focus:outline-none focus:ring-2 focus:ring-[#C48F65] text-[#C48F65] hover:bg-white/5 border border-[#C48F65]/30 mb-4"
                         >
-                            הסיפור שלי 📖
+                            הסיפור שלי
                         </button>
 
                         {CATEGORIES.filter(cat => cat !== "הכל").map(cat => (
@@ -916,40 +1000,117 @@ export default function Home() {
         </div>
 
         {subtotal > 0 && (
-            <div className="fixed bottom-8 left-0 right-0 px-6 z-50">
-            <div className="max-w-md mx-auto bg-gradient-to-r from-[#D4A5A5] to-[#C48F65] p-[1px] rounded-[2.5rem] shadow-[0_0_40px_rgba(196,143,101,0.4)]">
-                <div className="bg-[#0d0d0d]/95 backdrop-blur-xl rounded-[2.4rem] p-6 flex flex-col gap-4">
-                    
-                    <div className="flex justify-between items-center w-full">
-                        <div>
-                            <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest mb-1">סה"כ לתשלום</p>
-                            <span className="text-3xl font-black text-white">₪{subtotal}</span>
+            <>
+                {showCartReview && (
+                    <div
+                        className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+                        onClick={() => {
+                            setShowCartReview(false);
+                            setSelectedForDelete(new Set());
+                        }}
+                        aria-hidden="true"
+                    />
+                )}
+
+                {showCartReview && (
+                    <div
+                        className="fixed bottom-[4.25rem] left-0 right-0 px-3 z-50 pointer-events-none"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="רשימת פריטים בעגלה"
+                    >
+                        <div className="max-w-xl mx-auto pointer-events-auto bg-[#161616]/98 backdrop-blur-md border border-[#C48F65]/40 rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.5)] max-h-[45vh] flex flex-col overflow-hidden">
+                            <div className="px-3 py-2.5 border-b border-white/10 flex items-center justify-between gap-2">
+                                <h3 className="text-sm font-bold text-white">העגלה שלי</h3>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setShowCartReview(false);
+                                        setSelectedForDelete(new Set());
+                                    }}
+                                    className="text-xs text-gray-400 hover:text-white transition-colors px-2 py-1 rounded-lg hover:bg-white/5"
+                                >
+                                    סגור
+                                </button>
+                            </div>
+
+                            <ul className="overflow-y-auto p-2 space-y-1 flex-1">
+                                {cartItems.map(item => (
+                                    <li key={item.id}>
+                                        <label className="flex items-center gap-2.5 p-2 rounded-xl hover:bg-white/5 cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedForDelete.has(item.id)}
+                                                onChange={() => toggleSelectItem(item.id)}
+                                                className="w-4 h-4 accent-[#C48F65] shrink-0"
+                                            />
+                                            <span className="flex-1 min-w-0 text-sm text-white truncate">{item.name}</span>
+                                            <span className="text-[11px] text-gray-400 shrink-0">{item.qty} × ₪{item.price}</span>
+                                            <span className="text-sm font-bold text-[#C48F65] shrink-0">₪{item.total}</span>
+                                        </label>
+                                    </li>
+                                ))}
+                            </ul>
+
+                            <div className="px-2 py-2 border-t border-white/10 flex gap-2">
+                                <button
+                                    type="button"
+                                    onClick={selectAllCartItems}
+                                    className="flex-1 py-2 text-xs font-bold bg-white/10 border border-white/15 text-white rounded-xl hover:bg-white/20 transition-all"
+                                >
+                                    בחר הכל
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={deleteSelectedItems}
+                                    disabled={selectedForDelete.size === 0}
+                                    className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all ${
+                                        selectedForDelete.size > 0
+                                            ? 'bg-red-500/20 border border-red-500/40 text-red-300 hover:bg-red-500/30'
+                                            : 'bg-white/5 border border-white/10 text-gray-600 cursor-not-allowed'
+                                    }`}
+                                >
+                                    מחק נבחרים{selectedForDelete.size > 0 ? ` (${selectedForDelete.size})` : ''}
+                                </button>
+                            </div>
                         </div>
                     </div>
+                )}
 
-                    <div className="flex gap-2 w-full">
-                        <button 
-                            onClick={generateQuote} 
-                            aria-label="הפקת הצעת מחיר להדפסה"
-                            className="flex-1 bg-white/10 border border-white/20 text-white px-4 py-4 rounded-2xl font-bold hover:bg-white/20 transition-all flex justify-center items-center gap-2"
+                <div className="fixed bottom-3 left-0 right-0 px-3 z-50 pointer-events-none">
+                    <div className="max-w-xl mx-auto pointer-events-auto bg-[#0d0d0d]/95 backdrop-blur-md border border-[#C48F65]/40 rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.5)] px-2 py-2 flex items-center gap-1.5">
+                        <button
+                            type="button"
+                            onClick={toggleCartReview}
+                            aria-expanded={showCartReview}
+                            aria-label={`${showCartReview ? 'סגור' : 'פתח'} רשימת פריטים בעגלה`}
+                            className={`shrink-0 min-w-[4.5rem] ps-1 pe-1 py-1 rounded-xl text-right transition-all ${
+                                showCartReview ? 'bg-[#C48F65]/20' : 'hover:bg-white/5'
+                            }`}
                         >
-                            <span>הצעת מחיר</span>
-                            <span>📄</span>
+                            <p className="text-[9px] text-gray-500 font-bold uppercase tracking-wide leading-none mb-0.5">סה"כ</p>
+                            <p className="text-lg font-black text-white leading-tight">₪{subtotal}</p>
+                            <p className="text-[9px] text-[#C48F65] font-bold leading-none mt-0.5">{cartItemCount} פריטים</p>
                         </button>
-
-                        <button 
-                            onClick={send} 
-                            aria-label={`בצע הזמנה בוואטסאפ על סך ${subtotal} שקלים`}
-                            className="flex-[2] bg-white text-black px-6 py-4 rounded-2xl font-black hover:bg-[#C48F65] hover:text-white transition-all shadow-lg flex justify-center items-center gap-2"
+                        <button
+                            type="button"
+                            onClick={generateQuote}
+                            aria-label="הפקת הצעת מחיר להדפסה"
+                            className="flex-1 min-w-0 py-2.5 px-1.5 text-xs sm:text-sm font-bold bg-white/10 border border-white/15 text-white rounded-xl hover:bg-white/20 transition-all truncate"
                         >
-                            <span>להזמנה</span>
-                            <span className="text-xl" aria-hidden="true">🚀</span>
+                            הצעת מחיר
+                        </button>
+                        <button
+                            type="button"
+                            onClick={send}
+                            aria-label={`בצע הזמנה בוואטסאפ על סך ${subtotal} שקלים`}
+                            className="flex-[1.15] min-w-0 py-2.5 px-1.5 text-xs sm:text-sm font-black bg-[#C48F65] text-white rounded-xl hover:bg-[#D4A5A5] transition-all truncate"
+                        >
+                            להזמנה
                         </button>
                     </div>
-
                 </div>
-            </div>
-            </div>
+            </>
         )}
       </div>
     </main>
