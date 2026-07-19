@@ -1,27 +1,32 @@
 import type { Metadata } from "next";
-import { Assistant } from "next/font/google"; 
+import { Assistant, Frank_Ruhl_Libre } from "next/font/google";
 import "./globals.css";
 
-const assistant = Assistant({ subsets: ["hebrew"] });
+const assistant = Assistant({
+  subsets: ["hebrew", "latin"],
+  variable: "--font-assistant",
+});
 
-// --- כאן אנחנו מוסיפים את הגדרות הוואטסאפ והפייסבוק ---
+const frankRuhl = Frank_Ruhl_Libre({
+  subsets: ["hebrew", "latin"],
+  variable: "--font-display",
+  weight: ["400", "700"],
+});
+
 export const metadata: Metadata = {
-  // הכותרת שתופיע בלשונית הדפדפן
   title: "La Hilula - המטבח של אילנית",
-  description: "קייטרינג בוטיק, אוכל ביתי ומגשי אירוח ברמה אחרת. להזמנות: 050-666-9062",
-  
-  // חשוב! זו הכתובת הבסיסית של האתר כדי שהתמונות יעבדו
+  description:
+    "קייטרינג בוטיק, אוכל ביתי ומגשי אירוח ברמה אחרת. להזמנות: 050-666-9062",
   metadataBase: new URL("https://lahilula.vercel.app"),
-
-  // הגדרות עבור וואטסאפ ופייסבוק
   openGraph: {
-    title: "La Hilula - המטבח של אילנית 🌿",
-    description: "אוכל ביתי משובח, מגשי אירוח וטעמים שמרגישים בבית. היכנסו לתפריט והזמינו בוואטסאפ!",
+    title: "La Hilula - המטבח של אילנית",
+    description:
+      "אוכל ביתי משובח, מגשי אירוח וטעמים שמרגישים בבית. היכנסו לתפריט והזמינו בוואטסאפ!",
     url: "https://lahilula.vercel.app",
     siteName: "La Hilula",
     images: [
       {
-        url: "/logo.jpg", // וודא שקובץ הלוגו נמצא בתיקיית public בשם הזה
+        url: "/logo.jpg",
         width: 800,
         height: 800,
         alt: "La Hilula Logo",
@@ -30,8 +35,6 @@ export const metadata: Metadata = {
     locale: "he_IL",
     type: "website",
   },
-  
-  // האייקון הקטן בלשונית למעלה
   icons: {
     icon: "/logo.jpg",
   },
@@ -43,10 +46,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="he" dir="rtl">
-      <body className={assistant.className}>
-        {children}
-      </body>
+    <html lang="he" dir="rtl" className={`${assistant.variable} ${frankRuhl.variable}`}>
+      <body className={`${assistant.className} antialiased`}>{children}</body>
     </html>
   );
 }
