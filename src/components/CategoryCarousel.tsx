@@ -37,12 +37,16 @@ export function CategoryCarousel({ children, label }: CategoryCarouselProps) {
     const el = scrollerRef.current;
     if (!el) return;
 
-    updateScrollState();
+    // Defer so setState is not synchronous inside the effect body (eslint react-hooks)
+    const frame = requestAnimationFrame(() => updateScrollState());
     el.addEventListener("scroll", updateScrollState, { passive: true });
-    const ro = new ResizeObserver(updateScrollState);
+    const ro = new ResizeObserver(() => {
+      requestAnimationFrame(updateScrollState);
+    });
     ro.observe(el);
 
     return () => {
+      cancelAnimationFrame(frame);
       el.removeEventListener("scroll", updateScrollState);
       ro.disconnect();
     };
