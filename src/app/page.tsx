@@ -480,7 +480,7 @@ function MenuItem({ item, qty, update }: { item: any, qty: number, update: (id: 
 // --- הרכיב הראשי ---
 export default function Home() {
   const [cart, setCart] = useState<Record<number, number>>({});
-  const [info, setInfo] = useState({ name: '', address: '', guests: '' });
+  const [info, setInfo] = useState({ name: '', address: '', guests: '', note: '' });
   const [errors, setErrors] = useState({ name: false, address: false, guests: false });
   const [activeCategory, setActiveCategory] = useState("הכל");
   const [bgIndex, setBgIndex] = useState(0);
@@ -621,7 +621,8 @@ export default function Home() {
         return `• ${item?.name} (${q} יח') - ₪${(item?.price || 0) * q}`;
       }).join('\n');
 
-    const text = `הזמנה חדשה מ-La Hilula 🌿\n\nפירוט המנות:\n${items}\n\nסה"כ לתשלום: ₪${subtotal}\n\nפרטי האירוע:\nשם המזמין: ${info.name}\nמיקום/כתובת: ${info.address}\nמספר אורחים: ${info.guests}`;
+    const noteLine = info.note.trim() ? `\n\nהערות:\n${info.note.trim()}` : '';
+    const text = `הזמנה חדשה מ-La Hilula 🌿\n\nפירוט המנות:\n${items}\n\nסה"כ לתשלום: ₪${subtotal}\n\nפרטי האירוע:\nשם המזמין: ${info.name}\nמיקום/כתובת: ${info.address}\nמספר אורחים: ${info.guests}${noteLine}`;
     window.open(`https://wa.me/972506669062?text=${encodeURIComponent(text)}`);
   };
 
@@ -634,6 +635,13 @@ export default function Home() {
     });
 
     const logoUrl = window.location.origin + '/logo.jpg';
+
+    const escapeHtml = (value: string) =>
+      value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+    const noteSection = info.note.trim()
+      ? `<div class="note-section"><div class="label">הערות</div><div class="note-text">${escapeHtml(info.note.trim())}</div></div>`
+      : '';
 
     const quoteHTML = `
       <html dir="rtl">
@@ -651,6 +659,8 @@ export default function Home() {
             th { text-align: right; padding: 15px; border-bottom: 2px solid #eee; color: #C48F65; }
             td { padding: 15px; border-bottom: 1px solid #eee; }
             .total-row { font-size: 24px; font-weight: bold; color: #C48F65; text-align: left; margin-top: 30px; }
+            .note-section { background: #fff8f0; border: 1px solid rgba(196, 143, 101, 0.3); border-radius: 10px; padding: 16px 20px; margin-bottom: 30px; margin-top: 24px; }
+            .note-text { font-size: 15px; line-height: 1.6; white-space: pre-wrap; color: #444; }
             .footer { text-align: center; margin-top: 50px; font-size: 12px; color: #888; border-top: 1px solid #eee; padding-top: 20px; }
             @media print { body { padding: 0; } .no-print { display: none; } }
           </style>
@@ -701,6 +711,7 @@ export default function Home() {
             </tbody>
           </table>
           <div class="total-row">סה"כ לתשלום: ₪${subtotal}</div>
+          ${noteSection}
           <div class="footer">תודה שבחרתם בנו! La Hilula - אילנית ישראל<br/>ט.ל.ח | הצעת המחיר תקפה ל-14 יום</div>
         </body>
       </html>
@@ -1022,6 +1033,17 @@ export default function Home() {
                         }} 
                     />
                     {errors.guests && <p role="alert" className="text-red-400 text-xs mt-1 mr-2">נא למלא מספר אורחים</p>}
+                </div>
+
+                <div>
+                    <label htmlFor="note" className="sr-only">הערה להצעת מחיר</label>
+                    <textarea
+                        id="note"
+                        rows={3}
+                        placeholder="הערה להצעת מחיר (אופציונלי) — למשל תנאי תשלום, הנחה, הערות לאירוע"
+                        className="w-full bg-[#161616]/90 backdrop-blur-sm border border-white/10 p-5 rounded-2xl outline-none transition-colors placeholder:text-gray-500 focus:ring-2 focus:ring-[#C48F65] focus:border-[#D4A5A5]/50 resize-y min-h-[5rem]"
+                        onChange={e => setInfo({ ...info, note: e.target.value })}
+                    />
                 </div>
             </form>
         </div>
